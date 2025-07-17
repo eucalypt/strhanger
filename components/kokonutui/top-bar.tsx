@@ -43,9 +43,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch }: TopBarProps) {
     >
       <div className="flex items-center justify-between px-3 h-12">
       <Link
-          href="https://kokonutui.com/"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/"
           className="text-sm font-medium text-zinc-800 dark:text-zinc-200 shrink-0">Something Right</Link>
         <div className="flex-1 px-8 overflow-x-auto flex items-center justify-center gap-6 scrollbar-none">
           {categories.map((category) => (
