@@ -1,5 +1,6 @@
 import { motion } from "motion/react"
 import { X } from "lucide-react"
+import { useEffect } from "react"
 import type { CartItem } from "@/hooks/use-products"
 
 interface CartDrawerProps {
@@ -11,6 +12,22 @@ interface CartDrawerProps {
 
 export function CartDrawer({ cart, onClose, onRemoveFromCart, onUpdateQuantity }: CartDrawerProps) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  // 監聽 ESC 鍵關閉購物車
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    
+    // 清理事件監聽器
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
 
   return (
     <>

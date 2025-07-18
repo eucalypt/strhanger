@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react"
 import { X } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import type { Product } from "@/hooks/use-products"
 
 interface ProductModalProps {
@@ -13,6 +13,22 @@ interface ProductModalProps {
 
 export function ProductModal({ product, onClose, onAddToCart }: ProductModalProps) {
   const [quantity, setQuantity] = useState(1)
+
+  // 監聽 ESC 鍵關閉模態框
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    
+    // 清理事件監聽器
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
 
   return (
     <>
