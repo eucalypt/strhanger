@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { memberDB } from '@/lib/db/members'
+import bcrypt from 'bcryptjs'
 
 // PUT /api/members/[id] - 更新會員資料
 export async function PUT(
@@ -8,15 +9,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json()
-    const { name, email, phone } = body
-
-    // 驗證必填欄位
-    if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      )
-    }
+    const { name, email, phone, level, password } = body
 
     // 檢查會員是否存在
     const existingMember = await memberDB.getMemberById(params.id)
@@ -49,17 +42,85 @@ export async function PUT(
       }
     }
 
-    await memberDB.updateMember(params.id, {
-      name,
-      email: email || undefined,
-      phone: phone || undefined,
-    })
+    // 只更新有傳入的欄位
+    const updateData: any = {}
+    if (name !== undefined) updateData.name = name
+    if (email !== undefined) updateData.email = email || undefined
+    if (phone !== undefined) updateData.phone = phone || undefined
+    if (level !== undefined) updateData.level = level
+    if (password !== undefined && password !== '') {
+      updateData.password = await bcrypt.hash(password, 10)
+    }
+    await memberDB.updateMember(params.id, updateData)
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error updating member:', error)
     return NextResponse.json(
       { error: 'Failed to update member' },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE /api/members/[id] - 刪除會員
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await memberDB.deleteMember(params.id)
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting member:', error)
+    return NextResponse.json({ error: 'Failed to delete member' }, { status: 500 })
+  }
+}
+
+// PATCH /api/members/[id] - 修改密碼
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+    const { oldPassword, newPassword } = body
+
+    if (!oldPassword || !newPassword) {
+      return NextResponse.json(
+        { error: '請輸入舊密碼與新密碼' },
+        { status: 400 }
+      )
+    }
+    if (newPassword.length < 6) {
+      return NextResponse.json(
+        { error: '新密碼至少需要 6 個字元' },
+        { status: 400 }
+      )
+    }
+    const member = await memberDB.getMemberById(params.id)
+    if (!member || !member.password) {
+      return NextResponse.json(
+        { error: '會員不存在或無密碼紀錄' },
+        { status: 404 }
+      )
+    }
+    // 驗證舊密碼
+    const isMatch = await bcrypt.compare(oldPassword, member.password)
+    if (!isMatch) {
+      return NextResponse.json(
+        { error: '舊密碼錯誤' },
+        { status: 400 }
+      )
+    }
+    // 加密新密碼
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    await memberDB.updateMember(params.id, { password: hashedPassword })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error updating password:', error)
+    return NextResponse.json(
+      { error: '密碼修改失敗' },
       { status: 500 }
     )
   }

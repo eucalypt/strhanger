@@ -9,7 +9,7 @@ export interface Member {
   password?: string // 加密後的密碼
   googleId?: string // Google SSO ID
   avatar?: string
-  level: 'VIP' | '一般會員'
+  level: '管理員' | 'VIP' | '一般會員'
   points: number
   created_at: string
   updated_at: string
@@ -172,7 +172,7 @@ export const memberDB = {
   },
 
   // 升級會員等級
-  async upgradeMember(id: string, level: 'VIP' | '一般會員'): Promise<void> {
+  async upgradeMember(id: string, level: '管理員' | 'VIP' | '一般會員'): Promise<void> {
     await this.updateMember(id, { level })
   }
 }

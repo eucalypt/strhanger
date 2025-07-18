@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, ShoppingBag, X, User } from "lucide-react"
+import { Search, ShoppingBag, X, User, LogIn, ChevronDown } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "motion/react"
 import Link from "next/link";
@@ -27,7 +27,10 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
   const [categories, setCategories] = useState<string[]>(["全部"])
   const [loading, setLoading] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [memberData, setMemberData] = useState<any>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const [showMemberMenu, setShowMemberMenu] = useState(false)
+  const memberMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,9 +62,39 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
 
   // 檢查會員登入狀態
   useEffect(() => {
-    const memberLoggedIn = localStorage.getItem('memberLoggedIn') === 'true'
-    setIsLoggedIn(memberLoggedIn)
+    const checkLoginStatus = () => {
+      const memberLoggedIn = localStorage.getItem('memberLoggedIn') === 'true'
+      const storedMemberData = localStorage.getItem('memberData')
+      
+      console.log('Member login status:', memberLoggedIn)
+      setIsLoggedIn(memberLoggedIn)
+      if (storedMemberData) {
+        try {
+          setMemberData(JSON.parse(storedMemberData))
+        } catch (error) {
+          console.error('Error parsing member data:', error)
+        }
+      }
+    }
+
+    checkLoginStatus()
+    
+    // 監聽 localStorage 變化
+    window.addEventListener('storage', checkLoginStatus)
+    return () => window.removeEventListener('storage', checkLoginStatus)
   }, [])
+
+  // 點擊外部關閉下拉選單
+  useEffect(() => {
+    if (!showMemberMenu) return
+    const handleClick = (e: MouseEvent) => {
+      if (memberMenuRef.current && !memberMenuRef.current.contains(e.target as Node)) {
+        setShowMemberMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [showMemberMenu])
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -98,6 +131,16 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
+          {/* 管理員專屬：管理後台連結 */}
+          {isLoggedIn && memberData?.level === '管理員' && (
+            <Link
+              href="/admin"
+              className="px-2 py-1 rounded-md text-xs font-semibold bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors mr-2"
+              title="進入管理後台"
+            >
+              管理後台
+            </Link>
+          )}
           <motion.div className="relative" initial={false} animate={{ width: isSearchOpen ? "auto" : 0 }}>
             <input
               ref={searchInputRef}
@@ -130,22 +173,68 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
             className={`p-1.5 rounded-md transition-colors text-zinc-700 dark:text-zinc-300 ${
               isSearchOpen ? "bg-zinc-100 dark:bg-zinc-800" : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}
+            title="搜尋商品"
           >
             <Search className="w-4 h-4" />
           </button>
           
-          {/* 會員登入/註冊按鈕 */}
-          <Link
-            href={isLoggedIn ? "/member" : "/login"}
-            className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors text-zinc-700 dark:text-zinc-300"
-          >
-            <User className="w-4 h-4" />
-          </Link>
+          {/* 會員登入/註冊下拉選單 */}
+          <div className="relative" ref={memberMenuRef}>
+            <button
+              type="button"
+              onClick={() => setShowMemberMenu((v) => !v)}
+              className={`p-1.5 rounded-md transition-colors relative flex items-center gap-1 ${
+                isLoggedIn 
+                  ? "text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20" 
+                  : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              }`}
+              title={isLoggedIn ? `會員中心 - ${memberData?.name || '會員'}` : "會員登入/註冊"}
+            >
+              {isLoggedIn ? (
+                <User className="w-4 h-4" />
+              ) : (
+                <LogIn className="w-4 h-4" />
+              )}
+              <ChevronDown className="w-3 h-3" />
+              {isLoggedIn && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"
+                />
+              )}
+            </button>
+            {showMemberMenu && (
+              <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow-lg z-50 animate-fade-in">
+                {isLoggedIn ? (
+                  <div className="py-1">
+                    <div className="px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400">{memberData?.name || '會員'}</div>
+                    <Link href="/member" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">會員中心</Link>
+                    <Link href="/member/orders" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">訂單查詢</Link>
+                    <button
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
+                      onClick={() => {
+                        localStorage.removeItem('memberLoggedIn')
+                        localStorage.removeItem('memberData')
+                        setShowMemberMenu(false)
+                        window.location.reload()
+                      }}
+                    >登出</button>
+                  </div>
+                ) : (
+                  <div className="py-1">
+                    <Link href="/login" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">登入/註冊</Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           
           <button
             type="button"
             onClick={onCartClick}
             className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md relative text-zinc-700 dark:text-zinc-300"
+            title="購物車"
           >
             <ShoppingBag className="w-4 h-4" />
             {cartItemCount > 0 && (

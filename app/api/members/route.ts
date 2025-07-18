@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, phone, name, password, googleId, avatar } = body
+    const { email, phone, name, password, googleId, avatar, level } = body
 
     // 驗證必填欄位
     if (!name) {
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
       googleId,
       avatar,
-      level: '一般會員',
+      level: level || '一般會員',
     })
 
     // 移除敏感資訊

@@ -33,6 +33,13 @@ export function AdminNav() {
             >
               分類管理
             </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => router.push('/admin/members')}
+            >
+              會員管理
+            </Button>
           </div>
         </div>
         <div className="flex items-center space-x-2">

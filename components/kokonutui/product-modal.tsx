@@ -67,22 +67,22 @@ export function ProductModal({ product, onClose, onAddToCart }: ProductModalProp
                 <p className="text-sm text-zinc-600 dark:text-zinc-300">{product.description}</p>
                 <div className="text-sm space-y-1">
                   <p className="text-zinc-500">SKU: {product.id}</p>
-                  <p className={`text-sm ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
-                    庫存: {product.inStock ? '有庫存' : '缺貨'}
+                  <p className={`text-sm ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    庫存: {product.stock > 0 ? `${product.stock} 件` : '缺貨'}
                   </p>
                 </div>
               </div>
             </div>
             <button
               onClick={() => onAddToCart(product)}
-              disabled={!product.inStock}
+              disabled={product.stock === 0}
               className={`w-full mt-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                product.inStock 
-                  ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100' 
+                product.stock > 0
+                  ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100'
                   : 'bg-zinc-300 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 cursor-not-allowed'
               }`}
             >
-              {product.inStock ? '加入購物車' : '缺貨'}
+              {product.stock > 0 ? '加入購物車' : '缺貨'}
             </button>
           </div>
         </div>

@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { id, name, description, price, image, category, inStock } = body
+    const { id, name, description, price, image, category, stock } = body
 
     // 驗證必要欄位
     if (!name || !description || !price || !category) {
@@ -65,7 +65,8 @@ export async function POST(request: NextRequest) {
       price: Number(price),
       image: image || '',
       category,
-      inStock: inStock !== undefined ? inStock : true
+      stock: stock !== undefined ? Number(stock) : 0,
+      inStock: stock !== undefined ? Number(stock) > 0 : false
     })
 
     return NextResponse.json(
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { id, name, description, price, image, category, inStock } = body
+    const { id, name, description, price, image, category, stock } = body
 
     // 驗證必要欄位
     if (!id || !name || !description || !price || !category) {
@@ -111,7 +112,7 @@ export async function PUT(request: NextRequest) {
       price: Number(price),
       image: image || '',
       category,
-      inStock: inStock !== undefined ? inStock : true
+      stock: stock !== undefined ? Number(stock) : undefined
     })
 
     return NextResponse.json(

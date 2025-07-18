@@ -14,7 +14,7 @@ interface Member {
   name: string
   email?: string
   phone?: string
-  level: 'VIP' | '一般會員'
+  level: '管理員' | 'VIP' | '一般會員'
   points: number
   avatar?: string
   created_at: string
@@ -52,6 +52,14 @@ export default function MemberPage() {
     email: '',
     phone: ''
   })
+  const [showPasswordForm, setShowPasswordForm] = useState(false)
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmNewPassword: ''
+  })
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+  const [passwordLoading, setPasswordLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -129,6 +137,59 @@ export default function MemberPage() {
         description: error.message || "更新失敗",
         variant: "destructive",
       })
+    }
+  }
+
+  const handlePasswordChange = (field: string, value: string) => {
+    setPasswordForm(prev => ({ ...prev, [field]: value }))
+    setPasswordError(null)
+  }
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPasswordError(null)
+    setPasswordLoading(true)
+    if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
+      setPasswordError('新密碼與確認新密碼不一致')
+      setPasswordLoading(false)
+      return
+    }
+    if (passwordForm.newPassword.length < 6) {
+      setPasswordError('新密碼至少需要 6 個字元')
+      setPasswordLoading(false)
+      return
+    }
+    try {
+      const response = await fetch(`/api/members/${member?.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          oldPassword: passwordForm.oldPassword,
+          newPassword: passwordForm.newPassword
+        })
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        setPasswordError(data.error || '密碼修改失敗')
+        setPasswordLoading(false)
+        return
+      }
+      setShowPasswordForm(false)
+      setPasswordForm({ oldPassword: '', newPassword: '', confirmNewPassword: '' })
+      toast({ title: '成功', description: '密碼已成功修改，請重新登入。' })
+      // 強制登出
+      localStorage.removeItem('memberLoggedIn')
+      localStorage.removeItem('memberData')
+      router.push('/login')
+    } catch (error: any) {
+      setPasswordError(error.message || '密碼修改失敗')
+      toast({
+        title: '錯誤',
+        description: error.message || '密碼修改失敗',
+        variant: 'destructive',
+      })
+    } finally {
+      setPasswordLoading(false)
     }
   }
 
@@ -273,7 +334,45 @@ export default function MemberPage() {
                       編輯資料
                     </Button>
                   )}
+                  <Button variant="secondary" onClick={() => setShowPasswordForm(v => !v)}>
+                    {showPasswordForm ? '取消修改密碼' : '修改密碼'}
+                  </Button>
                 </div>
+                {showPasswordForm && (
+                  <form onSubmit={handleChangePassword} className="mt-6 space-y-4 max-w-md mx-auto bg-zinc-50 p-4 rounded border border-zinc-200">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">舊密碼</label>
+                      <Input
+                        type="password"
+                        value={passwordForm.oldPassword}
+                        onChange={e => handlePasswordChange('oldPassword', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">新密碼</label>
+                      <Input
+                        type="password"
+                        value={passwordForm.newPassword}
+                        onChange={e => handlePasswordChange('newPassword', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">確認新密碼</label>
+                      <Input
+                        type="password"
+                        value={passwordForm.confirmNewPassword}
+                        onChange={e => handlePasswordChange('confirmNewPassword', e.target.value)}
+                        required
+                      />
+                    </div>
+                    {passwordError && <div className="text-red-600 text-sm text-center font-medium">{passwordError}</div>}
+                    <Button type="submit" className="w-full" disabled={passwordLoading}>
+                      {passwordLoading ? '修改中...' : '確認修改密碼'}
+                    </Button>
+                  </form>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

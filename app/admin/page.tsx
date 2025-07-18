@@ -20,6 +20,7 @@ interface Product {
   price: number
   category: string
   image: string
+  stock: number
   inStock: boolean
 }
 
@@ -40,7 +41,7 @@ export default function AdminPage() {
     price: '',
     category: '',
     image: '',
-    inStock: true
+    stock: 0
   })
   const router = useRouter()
 
@@ -157,7 +158,7 @@ export default function AdminPage() {
       price: product.price.toString(),
       category: product.category,
       image: product.image,
-      inStock: product.inStock
+      stock: product.stock
     })
     setIsDialogOpen(true)
   }
@@ -169,7 +170,7 @@ export default function AdminPage() {
       price: '',
       category: '',
       image: '',
-      inStock: true
+      stock: 0
     })
     setEditingProduct(null)
   }
@@ -261,6 +262,16 @@ export default function AdminPage() {
                       required
                     />
                   </div>
+                  <div>
+                    <label className="text-sm font-medium">庫存數量</label>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={formData.stock ?? 0}
+                      onChange={e => setFormData(prev => ({ ...prev, stock: e.target.value === '' ? 0 : Number(e.target.value) }))}
+                      required
+                    />
+                  </div>
                 </div>
                 
                 <div>
@@ -307,16 +318,6 @@ export default function AdminPage() {
                   )}
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="inStock"
-                    checked={formData.inStock}
-                    onChange={(e) => setFormData(prev => ({ ...prev, inStock: e.target.checked }))}
-                  />
-                  <label htmlFor="inStock" className="text-sm font-medium">有庫存</label>
-                </div>
-
                 <div className="flex justify-end space-x-2">
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     取消
@@ -352,6 +353,7 @@ export default function AdminPage() {
                     <p className="text-sm text-gray-600 mb-2">{product.description}</p>
                     <p className="text-lg font-bold">NT$ {product.price}</p>
                     <p className="text-sm text-gray-500">{product.category}</p>
+                    <span className="block text-xs text-gray-500 mt-0.5">庫存：{Number.isFinite(product.stock) ? product.stock : 0}</span>
                   </div>
                   <div className="flex space-x-2">
                     <Button 

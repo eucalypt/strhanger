@@ -8,7 +8,8 @@ export interface Product {
   price: number
   image: string
   category: string
-  inStock: boolean
+  stock: number
+  inStock: boolean // 保留相容性，實際由 stock > 0 決定
   created_at: string
   updated_at: string
 }
@@ -58,7 +59,8 @@ function getDefaultProducts(): Product[] {
       price: 89,
       image: "/images/desk-lamp.jpg",
       category: "Lighting",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -69,7 +71,8 @@ function getDefaultProducts(): Product[] {
       price: 65,
       image: "/images/coffee-set.jpg",
       category: "Kitchenware",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -80,7 +83,8 @@ function getDefaultProducts(): Product[] {
       price: 45,
       image: "/images/throw-pillow.jpg",
       category: "Home Decor",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -91,7 +95,8 @@ function getDefaultProducts(): Product[] {
       price: 79,
       image: "/images/wall-clock.jpg",
       category: "Home Decor",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -102,7 +107,8 @@ function getDefaultProducts(): Product[] {
       price: 34,
       image: "/images/concrete-planter.jpg",
       category: "Plants",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -113,7 +119,8 @@ function getDefaultProducts(): Product[] {
       price: 55,
       image: "/images/glass-vase.jpg",
       category: "Home Decor",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -124,7 +131,8 @@ function getDefaultProducts(): Product[] {
       price: 42,
       image: "/images/bamboo-organizer.jpg",
       category: "Office",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -135,7 +143,8 @@ function getDefaultProducts(): Product[] {
       price: 38,
       image: "/images/marble-coasters.jpg",
       category: "Kitchenware",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -146,7 +155,8 @@ function getDefaultProducts(): Product[] {
       price: 68,
       image: "/images/brass-bookends.jpg",
       category: "Office",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -157,7 +167,8 @@ function getDefaultProducts(): Product[] {
       price: 48,
       image: "/images/ceramic-pot.jpg",
       category: "Plants",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -168,7 +179,8 @@ function getDefaultProducts(): Product[] {
       price: 120,
       image: "/images/wall-mirror.jpg",
       category: "Home Decor",
-      inStock: true,
+      stock: 0,
+      inStock: false,
       created_at: now,
       updated_at: now,
     },
@@ -214,7 +226,8 @@ export const productDB = {
     const now = new Date().toISOString()
     const newProduct: Product = {
       ...product,
-      inStock: product.inStock !== undefined ? product.inStock : true,
+      stock: product.stock !== undefined ? product.stock : 0,
+      inStock: (product.stock !== undefined ? product.stock : 0) > 0,
       created_at: now,
       updated_at: now,
     }
@@ -223,17 +236,16 @@ export const productDB = {
   },
 
   // 更新產品
-  async updateProduct(id: string, product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<void> {
+  async updateProduct(id: string, update: Partial<Product>): Promise<void> {
     const products = await readProducts()
     const index = products.findIndex(p => p.id === id)
-    if (index === -1) {
-      throw new Error('Product not found')
-    }
+    if (index === -1) throw new Error('Product not found')
     const now = new Date().toISOString()
     products[index] = {
       ...products[index],
-      ...product,
-      inStock: product.inStock !== undefined ? product.inStock : products[index].inStock,
+      ...update,
+      stock: update.stock !== undefined ? update.stock : products[index].stock,
+      inStock: (update.stock !== undefined ? update.stock : products[index].stock) > 0,
       updated_at: now,
     }
     await writeProducts(products)

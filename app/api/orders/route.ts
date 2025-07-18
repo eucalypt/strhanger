@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { orderDB } from '@/lib/db/members'
+import { productDB } from '@/lib/db/database'
 
 // GET /api/orders - 取得會員訂單
 export async function GET(request: NextRequest) {
@@ -79,6 +80,24 @@ export async function POST(request: NextRequest) {
         { error: 'Shipping address is required' },
         { status: 400 }
       )
+    }
+
+    // 檢查每個商品庫存
+    for (const item of items) {
+      const product = await productDB.getProductById(item.productId)
+      if (!product) {
+        return NextResponse.json({ error: `商品不存在: ${item.name}` }, { status: 400 })
+      }
+      if (product.stock < item.quantity) {
+        return NextResponse.json({ error: `商品「${item.name}」庫存不足` }, { status: 400 })
+      }
+    }
+    // 扣減庫存
+    for (const item of items) {
+      const product = await productDB.getProductById(item.productId)
+      await productDB.updateProduct(item.productId, {
+        stock: (product!.stock) - item.quantity
+      })
     }
 
     const newOrder = await orderDB.addOrder({

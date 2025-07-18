@@ -6,9 +6,10 @@
     "price": 89,
     "image": "/images/desk-lamp.jpg",
     "category": "Lighting",
-    "inStock": false,
+    "inStock": true,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T03:16:05.581Z"
+    "updated_at": "2025-07-18T07:07:27.076Z",
+    "stock": 1
   },
   {
     "id": "p2",
@@ -17,9 +18,10 @@
     "price": 65,
     "image": "/images/coffee-set.jpg",
     "category": "Kitchenware",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:22:14.688Z",
+    "stock": 0
   },
   {
     "id": "p3",
@@ -30,7 +32,8 @@
     "category": "Home Decor",
     "inStock": true,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:24:27.848Z",
+    "stock": 10
   },
   {
     "id": "p4",
@@ -39,9 +42,9 @@
     "price": 79,
     "image": "/images/wall-clock.jpg",
     "category": "Home Decor",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:13:01.820Z"
   },
   {
     "id": "p5",
@@ -50,9 +53,9 @@
     "price": 34,
     "image": "/images/concrete-planter.jpg",
     "category": "Plants",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:13:04.786Z"
   },
   {
     "id": "p6",
@@ -61,9 +64,9 @@
     "price": 55,
     "image": "/images/glass-vase.jpg",
     "category": "Home Decor",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:20:46.810Z"
   },
   {
     "id": "p7",
@@ -72,9 +75,9 @@
     "price": 42,
     "image": "/images/bamboo-organizer.jpg",
     "category": "Office",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:20:54.922Z"
   },
   {
     "id": "p8",
@@ -83,9 +86,9 @@
     "price": 38,
     "image": "/images/marble-coasters.jpg",
     "category": "Kitchenware",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:21:00.653Z"
   },
   {
     "id": "p9",
@@ -94,9 +97,9 @@
     "price": 68,
     "image": "/images/brass-bookends.jpg",
     "category": "Office",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:21:04.574Z"
   },
   {
     "id": "p10",
@@ -107,7 +110,8 @@
     "category": "Plants",
     "inStock": true,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:21:16.498Z",
+    "stock": 2
   },
   {
     "id": "p11",
@@ -116,9 +120,9 @@
     "price": 120,
     "image": "/images/wall-mirror.jpg",
     "category": "Home Decor",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T07:21:28.459Z"
   },
   {
     "id": "p100",
@@ -127,9 +131,9 @@
     "price": 999,
     "image": "/images/desk-lamp.jpg",
     "category": "Lighting",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.917Z",
-    "updated_at": "2025-07-18T02:27:05.917Z"
+    "updated_at": "2025-07-18T07:21:33.991Z"
   },
   {
     "id": "1752808350187",

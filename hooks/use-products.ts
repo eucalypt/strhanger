@@ -8,6 +8,7 @@ export interface Product {
   image: string
   category: string
   inStock: boolean
+  stock: number
   created_at?: string
   updated_at?: string
 }

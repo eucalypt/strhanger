@@ -2,12 +2,24 @@
   {
     "email": "test@example.com",
     "name": "測試會員",
-    "password": "$2b$10$pAHy0eaSXGY7pr1BEgGMlegfF6USgnAU.kyBRj958LoFMPuxorMru",
+    "password": "$2b$10$5idLx2i7XhPEftbZc.5yFOFC8poz0P6Z3NDSppGu31fgjW52fOiVS",
     "level": "一般會員",
     "id": "m1752818385624",
     "points": 0,
     "created_at": "2025-07-18T05:59:45.624Z",
-    "updated_at": "2025-07-18T05:59:53.289Z",
-    "last_login": "2025-07-18T05:59:53.289Z"
+    "updated_at": "2025-07-18T07:34:31.214Z",
+    "last_login": "2025-07-18T06:52:44.452Z"
+  },
+  {
+    "email": "eucalypt@gmail.com",
+    "phone": "0913327552",
+    "name": "Michael Huang",
+    "password": "$2b$10$hirsQWeiHQDZdkOcuwrhm.cmjPsLIJ5nvUbIe8cnG0u32S1ykytMy",
+    "level": "管理員",
+    "id": "m1752819877294",
+    "points": 0,
+    "created_at": "2025-07-18T06:24:37.294Z",
+    "updated_at": "2025-07-18T06:52:02.268Z",
+    "last_login": "2025-07-18T06:52:02.267Z"
   }
 ]

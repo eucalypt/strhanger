@@ -18,6 +18,7 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: ''
   })
+  const [formError, setFormError] = useState<string | null>(null)
   const router = useRouter()
 
   const handleInputChange = (field: string, value: string) => {
@@ -25,32 +26,32 @@ export default function RegisterPage() {
       ...prev,
       [field]: value
     }))
+    setFormError(null) // 清除錯誤訊息
   }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setFormError(null)
 
     try {
       // 驗證密碼
       if (formData.password !== formData.confirmPassword) {
-        toast({
-          title: "錯誤",
-          description: "密碼確認不符",
-          variant: "destructive",
-        })
+        setFormError('密碼確認不符')
         return
       }
-
       if (formData.password.length < 6) {
-        toast({
-          title: "錯誤",
-          description: "密碼至少需要 6 個字元",
-          variant: "destructive",
-        })
+        setFormError('密碼至少需要 6 個字元')
         return
       }
-
+      if (!formData.name) {
+        setFormError('姓名為必填')
+        return
+      }
+      if (!formData.email && !formData.phone) {
+        setFormError('請輸入電子郵件或手機號碼')
+        return
+      }
       const response = await fetch('/api/members', {
         method: 'POST',
         headers: {
@@ -63,20 +64,20 @@ export default function RegisterPage() {
           password: formData.password,
         }),
       })
-
       const data = await response.json()
-
       if (!response.ok) {
-        throw new Error(data.error || '註冊失敗')
+        setFormError(data.error || '註冊失敗')
+        return
       }
-
+      setFormError(null)
       toast({
         title: "成功",
         description: "註冊成功！請登入您的帳號",
       })
-
       router.push('/login')
     } catch (error: any) {
+      setFormError(error.message || '註冊失敗')
+      console.error('註冊錯誤:', error)
       toast({
         title: "錯誤",
         description: error.message || "註冊失敗",
@@ -196,6 +197,9 @@ export default function RegisterPage() {
                   >
                     {loading ? '註冊中...' : '註冊'}
                   </Button>
+                  {formError && (
+                    <div className="mt-2 text-red-600 text-sm text-center font-medium">{formError}</div>
+                  )}
                 </form>
               </TabsContent>
 
