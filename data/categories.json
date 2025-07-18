@@ -1,0 +1,44 @@
+[
+  {
+    "id": "c1",
+    "name": "Home Decor",
+    "description": "家居裝飾用品",
+    "created_at": "2025-07-18T03:04:55.735Z",
+    "updated_at": "2025-07-18T03:04:55.735Z"
+  },
+  {
+    "id": "c2",
+    "name": "Kitchenware",
+    "description": "廚房用品",
+    "created_at": "2025-07-18T03:04:55.735Z",
+    "updated_at": "2025-07-18T03:04:55.735Z"
+  },
+  {
+    "id": "c3",
+    "name": "Lighting",
+    "description": "照明設備",
+    "created_at": "2025-07-18T03:04:55.735Z",
+    "updated_at": "2025-07-18T03:04:55.735Z"
+  },
+  {
+    "id": "c4",
+    "name": "Office",
+    "description": "辦公用品",
+    "created_at": "2025-07-18T03:04:55.735Z",
+    "updated_at": "2025-07-18T03:04:55.735Z"
+  },
+  {
+    "id": "c5",
+    "name": "Plants",
+    "description": "植物相關",
+    "created_at": "2025-07-18T03:04:55.735Z",
+    "updated_at": "2025-07-18T03:04:55.735Z"
+  },
+  {
+    "id": "c1752807914894",
+    "name": "測試分類",
+    "description": "這是一個測試分類",
+    "created_at": "2025-07-18T03:05:14.894Z",
+    "updated_at": "2025-07-18T03:05:14.894Z"
+  }
+]

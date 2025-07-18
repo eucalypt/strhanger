@@ -30,7 +30,7 @@ interface Category {
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -54,7 +54,7 @@ export default function AdminPage() {
 
     fetchProducts()
     fetchCategories()
-  }, [router])
+  }, []) // 移除 router 依賴項
 
   const fetchProducts = async () => {
     try {
@@ -77,7 +77,9 @@ export default function AdminPage() {
     try {
       const response = await fetch('/api/categories')
       const data = await response.json()
-      setCategories(data)
+      // 轉換為字串陣列以保持向後相容
+      const categoryNames = data.map((cat: any) => cat.name)
+      setCategories(categoryNames)
     } catch (error) {
       console.error('Error fetching categories:', error)
     }
@@ -187,7 +189,7 @@ export default function AdminPage() {
 
       if (response.ok) {
         const data = await response.json()
-        setFormData(prev => ({ ...prev, image: data.filename }))
+        setFormData(prev => ({ ...prev, image: data.url }))
         toast({
           title: "成功",
           description: "圖片已上傳",
@@ -233,7 +235,7 @@ export default function AdminPage() {
                 新增商品
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl bg-white text-black dark:bg-zinc-900 dark:text-white">
               <DialogHeader>
                 <DialogTitle>
                   {editingProduct ? '編輯商品' : '新增商品'}
@@ -267,10 +269,10 @@ export default function AdminPage() {
                     <SelectTrigger>
                       <SelectValue placeholder="選擇分類" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white text-black dark:bg-zinc-900 dark:text-white border border-gray-200 dark:border-gray-700">
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.name}>
-                          {category.name}
+                        <SelectItem key={category} value={category}>
+                          {category}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -297,7 +299,7 @@ export default function AdminPage() {
                   {formData.image && (
                     <div className="mt-2">
                       <img 
-                        src={`/images/${formData.image}`} 
+                        src={formData.image} 
                         alt="Preview" 
                         className="w-20 h-20 object-cover rounded"
                       />
@@ -342,7 +344,7 @@ export default function AdminPage() {
               <CardContent>
                 <div className="space-y-4">
                   <img 
-                    src={`/images/${product.image}`} 
+                    src={product.image} 
                     alt={product.name}
                     className="w-full h-48 object-cover rounded"
                   />
