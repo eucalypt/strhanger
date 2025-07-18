@@ -130,5 +130,16 @@
     "inStock": true,
     "created_at": "2025-07-18T02:27:05.917Z",
     "updated_at": "2025-07-18T02:27:05.917Z"
+  },
+  {
+    "id": "p1752808216532",
+    "name": "測試商品",
+    "description": "測試描述",
+    "price": 100,
+    "image": "",
+    "category": "Home Decor",
+    "inStock": true,
+    "created_at": "2025-07-18T03:10:16.533Z",
+    "updated_at": "2025-07-18T03:10:16.533Z"
   }
 ]

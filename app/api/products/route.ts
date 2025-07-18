@@ -38,15 +38,18 @@ export async function POST(request: NextRequest) {
     const { id, name, description, price, image, category, inStock } = body
 
     // 驗證必要欄位
-    if (!id || !name || !description || !price || !image || !category) {
+    if (!name || !description || !price || !category) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       )
     }
 
+    // 生成 ID（如果沒有提供）
+    const productId = id || `p${Date.now()}`
+    
     // 檢查產品是否已存在
-    const existingProduct = await productDB.getProductById(id)
+    const existingProduct = await productDB.getProductById(productId)
     if (existingProduct) {
       return NextResponse.json(
         { error: 'Product with this ID already exists' },
@@ -56,17 +59,17 @@ export async function POST(request: NextRequest) {
 
     // 新增產品
     await productDB.addProduct({
-      id,
+      id: productId,
       name,
       description,
       price: Number(price),
-      image,
+      image: image || '',
       category,
       inStock: inStock !== undefined ? inStock : true
     })
 
     return NextResponse.json(
-      { message: 'Product added successfully', id },
+      { message: 'Product added successfully', id: productId },
       { status: 201 }
     )
   } catch (error) {
@@ -85,7 +88,7 @@ export async function PUT(request: NextRequest) {
     const { id, name, description, price, image, category, inStock } = body
 
     // 驗證必要欄位
-    if (!id || !name || !description || !price || !image || !category) {
+    if (!id || !name || !description || !price || !category) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -106,7 +109,7 @@ export async function PUT(request: NextRequest) {
       name,
       description,
       price: Number(price),
-      image,
+      image: image || '',
       category,
       inStock: inStock !== undefined ? inStock : true
     })
