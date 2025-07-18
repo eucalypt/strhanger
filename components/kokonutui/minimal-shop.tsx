@@ -14,18 +14,18 @@ export default function MinimalShop() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [selectedCategory, setSelectedCategory] = useState("全部")
 
   // 處理搜尋
   const handleSearch = async (query: string) => {
     setSearchQuery(query)
-    await fetchProducts(selectedCategory === "All" ? undefined : selectedCategory, query || undefined)
+    await fetchProducts(selectedCategory === "全部" ? undefined : selectedCategory, query || undefined)
   }
 
   // 處理分類篩選
   const handleCategoryChange = async (category: string) => {
     setSelectedCategory(category)
-    await fetchProducts(category === "All" ? undefined : category, searchQuery || undefined)
+    await fetchProducts(category === "全部" ? undefined : category, searchQuery || undefined)
   }
 
   const addToCart = (product: Product, quantity = 1) => {

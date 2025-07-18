@@ -68,7 +68,7 @@ export function ProductModal({ product, onClose, onAddToCart }: ProductModalProp
                 <div className="text-xs space-y-1">
                   <p className="text-zinc-500">SKU: {product.id}</p>
                   <p className={`text-xs ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
-                    Stock: {product.inStock ? 'Available' : 'Out of Stock'}
+                    庫存: {product.inStock ? '有庫存' : '缺貨'}
                   </p>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export function ProductModal({ product, onClose, onAddToCart }: ProductModalProp
                   : 'bg-zinc-300 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 cursor-not-allowed'
               }`}
             >
-              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+              {product.inStock ? '加入購物車' : '缺貨'}
             </button>
           </div>
         </div>

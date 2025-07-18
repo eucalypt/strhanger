@@ -46,7 +46,7 @@ export function CartDrawer({ cart, onClose, onRemoveFromCart, onUpdateQuantity }
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
-            <h2 className="text-lg font-medium">Shopping Cart</h2>
+            <h2 className="text-lg font-medium">購物車</h2>
             <button onClick={onClose} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full">
               <X className="w-5 h-5" />
             </button>
@@ -91,11 +91,11 @@ export function CartDrawer({ cart, onClose, onRemoveFromCart, onUpdateQuantity }
 
           <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
             <div className="flex justify-between mb-4">
-              <span className="text-base">Total</span>
+              <span className="text-base">總計</span>
               <span className="text-base font-medium">${total}</span>
             </div>
             <button className="w-full py-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-base font-medium rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors">
-              Checkout
+              結帳
             </button>
           </div>
         </div>

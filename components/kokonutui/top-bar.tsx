@@ -13,7 +13,7 @@ interface TopBarProps {
   onCategoryChange: (category: string) => void
 }
 
-const categories = ["All", "Lighting", "Kitchenware", "Home Decor", "Plants", "Office", "Textiles"]
+const categories = ["全部", "Lighting", "Kitchenware", "Home Decor", "Plants", "Office", "Textiles"]
 
 export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory, onCategoryChange }: TopBarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -67,7 +67,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
             <input
               ref={searchInputRef}
               type="text"
-              placeholder="Search products..."
+              placeholder="搜尋商品..."
               className={`w-48 sm:w-56 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm px-3 py-1.5 
                                 text-zinc-800 dark:text-zinc-200
                                 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700
