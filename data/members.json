@@ -1,0 +1,13 @@
+[
+  {
+    "email": "test@example.com",
+    "name": "測試會員",
+    "password": "$2b$10$pAHy0eaSXGY7pr1BEgGMlegfF6USgnAU.kyBRj958LoFMPuxorMru",
+    "level": "一般會員",
+    "id": "m1752818385624",
+    "points": 0,
+    "created_at": "2025-07-18T05:59:45.624Z",
+    "updated_at": "2025-07-18T05:59:53.289Z",
+    "last_login": "2025-07-18T05:59:53.289Z"
+  }
+]

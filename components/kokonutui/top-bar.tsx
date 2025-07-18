@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, ShoppingBag, X } from "lucide-react"
+import { Search, ShoppingBag, X, User } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "motion/react"
 import Link from "next/link";
@@ -26,6 +26,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
   const [isScrolled, setIsScrolled] = useState(false)
   const [categories, setCategories] = useState<string[]>(["全部"])
   const [loading, setLoading] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -54,6 +55,12 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
     }
 
     fetchCategories()
+  }, [])
+
+  // 檢查會員登入狀態
+  useEffect(() => {
+    const memberLoggedIn = localStorage.getItem('memberLoggedIn') === 'true'
+    setIsLoggedIn(memberLoggedIn)
   }, [])
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -126,6 +133,15 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
           >
             <Search className="w-4 h-4" />
           </button>
+          
+          {/* 會員登入/註冊按鈕 */}
+          <Link
+            href={isLoggedIn ? "/member" : "/login"}
+            className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors text-zinc-700 dark:text-zinc-300"
+          >
+            <User className="w-4 h-4" />
+          </Link>
+          
           <button
             type="button"
             onClick={onCartClick}
