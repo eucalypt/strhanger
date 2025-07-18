@@ -13,11 +13,19 @@ interface TopBarProps {
   onCategoryChange: (category: string) => void
 }
 
-const categories = ["全部", "Lighting", "Kitchenware", "Home Decor", "Plants", "Office", "Textiles"]
+interface Category {
+  id: string
+  name: string
+  description?: string
+  created_at: string
+  updated_at: string
+}
 
 export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory, onCategoryChange }: TopBarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [categories, setCategories] = useState<string[]>(["全部"])
+  const [loading, setLoading] = useState(true)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -26,6 +34,26 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // 載入分類資料
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories')
+        const data: Category[] = await response.json()
+        const categoryNames = ["全部", ...data.map(cat => cat.name)]
+        setCategories(categoryNames)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+        // 如果載入失敗，使用預設分類
+        setCategories(["全部", "Lighting", "Kitchenware", "Home Decor", "Plants", "Office", "Textiles"])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCategories()
   }, [])
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -46,7 +74,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
           href="/"
           className="text-sm font-medium text-zinc-800 dark:text-zinc-200 shrink-0">Something Right</Link>
         <div className="flex-1 px-8 overflow-x-auto flex items-center justify-center gap-6 scrollbar-none">
-          {categories.map((category) => (
+          {!loading && categories.map((category) => (
             <button
               type="button"
               key={category}
