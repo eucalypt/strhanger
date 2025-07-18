@@ -1,14 +1,15 @@
 import { motion } from "motion/react"
 import { X } from "lucide-react"
-import type { CartItem } from "./data"
+import type { CartItem } from "@/hooks/use-products"
 
 interface CartDrawerProps {
   cart: CartItem[]
   onClose: () => void
   onRemoveFromCart: (productId: string) => void
+  onUpdateQuantity: (productId: string, quantity: number) => void
 }
 
-export function CartDrawer({ cart, onClose, onRemoveFromCart }: CartDrawerProps) {
+export function CartDrawer({ cart, onClose, onRemoveFromCart, onUpdateQuantity }: CartDrawerProps) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
@@ -48,8 +49,24 @@ export function CartDrawer({ cart, onClose, onRemoveFromCart }: CartDrawerProps)
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Qty: {item.quantity}</p>
-                  <p className="text-base font-medium mt-1">${item.price * item.quantity}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <button
+                      onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                      className="w-6 h-6 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-sm"
+                    >
+                      -
+                    </button>
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400 min-w-[20px] text-center">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                      className="w-6 h-6 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-sm"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <p className="text-base font-medium mt-2">${item.price * item.quantity}</p>
                 </div>
               </div>
             ))}

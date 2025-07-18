@@ -3,7 +3,7 @@
 import { motion } from "motion/react"
 import { X } from "lucide-react"
 import { useState } from "react"
-import type { Product } from "./data"
+import type { Product } from "@/hooks/use-products"
 
 interface ProductModalProps {
   product: Product

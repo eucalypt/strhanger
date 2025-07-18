@@ -1,5 +1,5 @@
 import { motion } from "motion/react"
-import type { Product } from "./data"
+import type { Product } from "@/hooks/use-products"
 
 interface ProductGridProps {
   products: Product[]

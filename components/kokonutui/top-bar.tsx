@@ -5,18 +5,18 @@ import { useState, useEffect, useRef } from "react"
 import { motion } from "motion/react"
 import Link from "next/link";
 
-
 interface TopBarProps {
   cartItemCount: number
   onCartClick: () => void
   onSearch: (query: string) => void
+  selectedCategory: string
+  onCategoryChange: (category: string) => void
 }
 
 const categories = ["All", "Lighting", "Kitchenware", "Home Decor", "Plants", "Office", "Textiles"]
 
-export function TopBar({ cartItemCount, onCartClick, onSearch }: TopBarProps) {
+export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory, onCategoryChange }: TopBarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState("All")
   const [isScrolled, setIsScrolled] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
@@ -55,7 +55,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch }: TopBarProps) {
                   ? "text-zinc-900 dark:text-white text-sm font-medium"
                   : "text-zinc-600 dark:text-zinc-400 text-sm hover:text-zinc-900 dark:hover:text-white"
               }`}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => onCategoryChange(category)}
             >
               {category}
             </button>

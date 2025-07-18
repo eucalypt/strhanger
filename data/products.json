@@ -1,0 +1,122 @@
+[
+  {
+    "id": "p1",
+    "name": "Minimal Desk Lamp",
+    "description": "A sleek and modern desk lamp with adjustable brightness and color temperature.",
+    "price": 89,
+    "image": "/images/desk-lamp.jpg",
+    "category": "Lighting",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p2",
+    "name": "Ceramic Coffee Set",
+    "description": "Handcrafted ceramic coffee set including 4 cups and a matching pour-over dripper.",
+    "price": 65,
+    "image": "/images/coffee-set.jpg",
+    "category": "Kitchenware",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p3",
+    "name": "Linen Throw Pillow",
+    "description": "Soft linen throw pillow with minimalist pattern design.",
+    "price": 45,
+    "image": "/images/throw-pillow.jpg",
+    "category": "Home Decor",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p4",
+    "name": "Wooden Wall Clock",
+    "description": "Modern wooden wall clock with silent movement.",
+    "price": 79,
+    "image": "/images/wall-clock.jpg",
+    "category": "Home Decor",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p5",
+    "name": "Concrete Planter",
+    "description": "Minimalist concrete planter perfect for succulents.",
+    "price": 34,
+    "image": "/images/concrete-planter.jpg",
+    "category": "Plants",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p6",
+    "name": "Glass Vase Set",
+    "description": "Set of 3 minimalist glass vases in varying sizes.",
+    "price": 55,
+    "image": "/images/glass-vase.jpg",
+    "category": "Home Decor",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p7",
+    "name": "Bamboo Organizer",
+    "description": "Desk organizer made from sustainable bamboo.",
+    "price": 42,
+    "image": "/images/bamboo-organizer.jpg",
+    "category": "Office",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p8",
+    "name": "Marble Coasters",
+    "description": "Set of 4 marble coasters with cork backing.",
+    "price": 38,
+    "image": "/images/marble-coasters.jpg",
+    "category": "Kitchenware",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p9",
+    "name": "Brass Bookends",
+    "description": "Modern geometric brass bookends, set of 2.",
+    "price": 68,
+    "image": "/images/brass-bookends.jpg",
+    "category": "Office",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p10",
+    "name": "Ceramic Plant Pot",
+    "description": "Handmade ceramic plant pot with drainage hole.",
+    "price": 48,
+    "image": "/images/ceramic-pot.jpg",
+    "category": "Plants",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p11",
+    "name": "Wall Mirror",
+    "description": "Round wall mirror with minimal metal frame.",
+    "price": 120,
+    "image": "/images/wall-mirror.jpg",
+    "category": "Home Decor",
+    "created_at": "2025-07-18T02:27:05.916Z",
+    "updated_at": "2025-07-18T02:27:05.916Z"
+  },
+  {
+    "id": "p100",
+    "name": "Test Product",
+    "description": "這是一個測試商品",
+    "price": 999,
+    "image": "/images/desk-lamp.jpg",
+    "category": "Lighting",
+    "created_at": "2025-07-18T02:27:05.917Z",
+    "updated_at": "2025-07-18T02:27:05.917Z"
+  }
+]
