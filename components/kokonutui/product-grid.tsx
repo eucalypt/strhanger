@@ -26,11 +26,11 @@ export function ProductGrid({ products, onProductSelect }: ProductGridProps) {
             />
           </div>
           <div className="mt-1.5 space-y-0.5">
-            <h3 className="text-sm font-medium truncate">{product.name}</h3>
+            <h3 className="text-base font-medium truncate">{product.name}</h3>
             <div className="flex justify-between items-center">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">${product.price}</p>
+              <p className="text-base text-zinc-500 dark:text-zinc-400">${product.price}</p>
               <div className="flex items-center space-x-1">
-                <p className="text-xs text-zinc-400 dark:text-zinc-500">{product.category}</p>
+                <p className="text-sm text-zinc-400 dark:text-zinc-500">{product.category}</p>
                 <div className={`w-1.5 h-1.5 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
               </div>
             </div>

@@ -58,16 +58,16 @@ export function ProductModal({ product, onClose, onAddToCart }: ProductModalProp
             <div className="flex-1">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h2 className="text-sm font-medium">{product.name}</h2>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">{product.category}</p>
+                  <h2 className="text-base font-medium">{product.name}</h2>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{product.category}</p>
                 </div>
-                <p className="text-sm font-medium">${product.price}</p>
+                <p className="text-base font-medium">${product.price}</p>
               </div>
               <div className="space-y-2">
-                <p className="text-xs text-zinc-600 dark:text-zinc-300">{product.description}</p>
-                <div className="text-xs space-y-1">
+                <p className="text-sm text-zinc-600 dark:text-zinc-300">{product.description}</p>
+                <div className="text-sm space-y-1">
                   <p className="text-zinc-500">SKU: {product.id}</p>
-                  <p className={`text-xs ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className={`text-sm ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
                     庫存: {product.inStock ? '有庫存' : '缺貨'}
                   </p>
                 </div>
@@ -76,7 +76,7 @@ export function ProductModal({ product, onClose, onAddToCart }: ProductModalProp
             <button
               onClick={() => onAddToCart(product)}
               disabled={!product.inStock}
-              className={`w-full mt-3 py-2 text-xs font-medium rounded-md transition-colors ${
+              className={`w-full mt-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 product.inStock 
                   ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100' 
                   : 'bg-zinc-300 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 cursor-not-allowed'
