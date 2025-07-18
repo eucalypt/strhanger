@@ -8,6 +8,7 @@ export interface Product {
   price: number
   image: string
   category: string
+  inStock: boolean
   created_at: string
   updated_at: string
 }
@@ -57,6 +58,7 @@ function getDefaultProducts(): Product[] {
       price: 89,
       image: "/images/desk-lamp.jpg",
       category: "Lighting",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -67,6 +69,7 @@ function getDefaultProducts(): Product[] {
       price: 65,
       image: "/images/coffee-set.jpg",
       category: "Kitchenware",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -77,6 +80,7 @@ function getDefaultProducts(): Product[] {
       price: 45,
       image: "/images/throw-pillow.jpg",
       category: "Home Decor",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -87,6 +91,7 @@ function getDefaultProducts(): Product[] {
       price: 79,
       image: "/images/wall-clock.jpg",
       category: "Home Decor",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -97,6 +102,7 @@ function getDefaultProducts(): Product[] {
       price: 34,
       image: "/images/concrete-planter.jpg",
       category: "Plants",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -107,6 +113,7 @@ function getDefaultProducts(): Product[] {
       price: 55,
       image: "/images/glass-vase.jpg",
       category: "Home Decor",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -117,6 +124,7 @@ function getDefaultProducts(): Product[] {
       price: 42,
       image: "/images/bamboo-organizer.jpg",
       category: "Office",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -127,6 +135,7 @@ function getDefaultProducts(): Product[] {
       price: 38,
       image: "/images/marble-coasters.jpg",
       category: "Kitchenware",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -137,6 +146,7 @@ function getDefaultProducts(): Product[] {
       price: 68,
       image: "/images/brass-bookends.jpg",
       category: "Office",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -147,6 +157,7 @@ function getDefaultProducts(): Product[] {
       price: 48,
       image: "/images/ceramic-pot.jpg",
       category: "Plants",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -157,6 +168,7 @@ function getDefaultProducts(): Product[] {
       price: 120,
       image: "/images/wall-mirror.jpg",
       category: "Home Decor",
+      inStock: true,
       created_at: now,
       updated_at: now,
     },
@@ -202,6 +214,7 @@ export const productDB = {
     const now = new Date().toISOString()
     const newProduct: Product = {
       ...product,
+      inStock: product.inStock !== undefined ? product.inStock : true,
       created_at: now,
       updated_at: now,
     }
@@ -220,6 +233,7 @@ export const productDB = {
     products[index] = {
       ...products[index],
       ...product,
+      inStock: product.inStock !== undefined ? product.inStock : products[index].inStock,
       updated_at: now,
     }
     await writeProducts(products)

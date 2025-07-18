@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { id, name, description, price, image, category } = body
+    const { id, name, description, price, image, category, inStock } = body
 
     // 驗證必要欄位
     if (!id || !name || !description || !price || !image || !category) {
@@ -61,7 +61,8 @@ export async function POST(request: NextRequest) {
       description,
       price: Number(price),
       image,
-      category
+      category,
+      inStock: inStock !== undefined ? inStock : true
     })
 
     return NextResponse.json(
@@ -72,6 +73,52 @@ export async function POST(request: NextRequest) {
     console.error('Error adding product:', error)
     return NextResponse.json(
       { error: 'Failed to add product' },
+      { status: 500 }
+    )
+  }
+}
+
+// PUT /api/products - 更新產品
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, name, description, price, image, category, inStock } = body
+
+    // 驗證必要欄位
+    if (!id || !name || !description || !price || !image || !category) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    // 檢查產品是否存在
+    const existingProduct = await productDB.getProductById(id)
+    if (!existingProduct) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      )
+    }
+
+    // 更新產品
+    await productDB.updateProduct(id, {
+      name,
+      description,
+      price: Number(price),
+      image,
+      category,
+      inStock: inStock !== undefined ? inStock : true
+    })
+
+    return NextResponse.json(
+      { message: 'Product updated successfully', id },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('Error updating product:', error)
+    return NextResponse.json(
+      { error: 'Failed to update product' },
       { status: 500 }
     )
   }

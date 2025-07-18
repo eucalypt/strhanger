@@ -80,8 +80,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = params
+
     // 檢查產品是否存在
-    const existingProduct = await productDB.getProductById(params.id)
+    const existingProduct = await productDB.getProductById(id)
     if (!existingProduct) {
       return NextResponse.json(
         { error: 'Product not found' },
@@ -90,7 +92,7 @@ export async function DELETE(
     }
 
     // 刪除產品
-    await productDB.deleteProduct(params.id)
+    await productDB.deleteProduct(id)
 
     return NextResponse.json(
       { message: 'Product deleted successfully' },
