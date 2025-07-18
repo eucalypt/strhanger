@@ -6,9 +6,9 @@
     "price": 89,
     "image": "/images/desk-lamp.jpg",
     "category": "Lighting",
-    "inStock": true,
+    "inStock": false,
     "created_at": "2025-07-18T02:27:05.916Z",
-    "updated_at": "2025-07-18T02:27:05.916Z"
+    "updated_at": "2025-07-18T03:16:05.581Z"
   },
   {
     "id": "p2",
@@ -132,14 +132,14 @@
     "updated_at": "2025-07-18T02:27:05.917Z"
   },
   {
-    "id": "p1752808216532",
-    "name": "測試商品",
-    "description": "測試描述",
-    "price": 100,
-    "image": "",
-    "category": "Home Decor",
-    "inStock": true,
-    "created_at": "2025-07-18T03:10:16.533Z",
-    "updated_at": "2025-07-18T03:10:16.533Z"
+    "id": "1752808350187",
+    "name": "粉紅小裙裙",
+    "description": "江棉的小裙裙",
+    "price": 666,
+    "image": "/images/1752808344512.jpg",
+    "category": "長裙",
+    "inStock": false,
+    "created_at": "2025-07-18T03:12:30.206Z",
+    "updated_at": "2025-07-18T03:12:30.206Z"
   }
 ]
