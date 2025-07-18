@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,32 @@ export default function RegisterPage() {
   })
   const [formError, setFormError] = useState<string | null>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    // Google SSO callback 處理
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('google') === '1') {
+        const memberId = params.get('memberId')
+        if (memberId) {
+          fetch(`/api/members?id=${memberId}`)
+            .then(res => res.json())
+            .then(member => {
+              localStorage.setItem('memberLoggedIn', 'true')
+              localStorage.setItem('memberData', JSON.stringify(member))
+              toast({ title: 'Google 註冊成功', description: `歡迎加入，${member.name || member.email}` })
+              setTimeout(() => {
+                window.history.replaceState({}, document.title, window.location.pathname)
+                window.location.replace('/member')
+              }, 1000)
+            })
+        }
+      } else if (params.get('error')) {
+        toast({ title: 'Google 註冊失敗', description: 'Google SSO 流程發生錯誤', variant: 'destructive' })
+        window.history.replaceState({}, document.title, window.location.pathname)
+      }
+    }
+  }, [])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -117,7 +143,7 @@ export default function RegisterPage() {
             <Tabs defaultValue="traditional" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="traditional">傳統註冊</TabsTrigger>
-                <TabsTrigger value="google">Google 登入</TabsTrigger>
+                <TabsTrigger value="google">Google 註冊</TabsTrigger>
               </TabsList>
 
               <TabsContent value="traditional" className="space-y-4">
@@ -209,7 +235,7 @@ export default function RegisterPage() {
                     使用 Google 帳號快速註冊
                   </p>
                   <Button
-                    onClick={handleGoogleLogin}
+                    onClick={() => window.location.href = '/api/auth/google'}
                     variant="outline"
                     className="w-full"
                   >
