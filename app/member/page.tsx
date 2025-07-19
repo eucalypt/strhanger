@@ -99,6 +99,7 @@ export default function MemberPage() {
       return
     }
 
+    // 從 localStorage 獲取會員資料並同步更新
     const memberData = localStorage.getItem('memberData')
     if (memberData) {
       const parsedMember = JSON.parse(memberData)
@@ -109,8 +110,42 @@ export default function MemberPage() {
         phone: parsedMember.phone || ''
       })
       fetchOrders(parsedMember.id)
+      
+      // 從伺服器獲取最新的會員資料
+      fetchLatestMemberData(parsedMember.id)
     }
   }, [])
+
+  // 從伺服器獲取最新的會員資料
+  const fetchLatestMemberData = async (memberId: string) => {
+    try {
+      const response = await fetch(`/api/members?id=${memberId}`)
+      if (response.ok) {
+        const latestMember = await response.json()
+        setMember(latestMember)
+        setFormData({
+          name: latestMember.name,
+          email: latestMember.email || '',
+          phone: latestMember.phone || ''
+        })
+        // 更新 localStorage 中的會員資料
+        localStorage.setItem('memberData', JSON.stringify(latestMember))
+      }
+    } catch (error) {
+      console.error('Error fetching latest member data:', error)
+    }
+  }
+
+  // 定期刷新會員資料（每30秒檢查一次）
+  useEffect(() => {
+    if (!member?.id) return
+
+    const interval = setInterval(() => {
+      fetchLatestMemberData(member.id)
+    }, 30000) // 30秒
+
+    return () => clearInterval(interval)
+  }, [member?.id])
 
   const fetchOrders = async (memberId: string) => {
     try {
@@ -259,6 +294,13 @@ export default function MemberPage() {
               <h1 className="text-2xl font-bold text-gray-900">會員中心</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <Button 
+                variant="outline" 
+                onClick={() => member?.id && fetchLatestMemberData(member.id)}
+                disabled={loading}
+              >
+                刷新資料
+              </Button>
               <Button variant="outline" onClick={() => router.push('/')}>
                 返回首頁
               </Button>
