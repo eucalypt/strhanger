@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { orderDB } from '@/lib/db/members'
-import { productDB } from '@/lib/db/database'
+import { orderDB, productDB } from '@/lib/db/supabase-db'
 
 // GET /api/orders - 取得會員訂單
 export async function GET(request: NextRequest) {

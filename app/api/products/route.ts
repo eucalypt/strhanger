@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { productDB } from '@/lib/db/database'
+import { productDB } from '@/lib/db/supabase-db'
 
 // GET /api/products - 取得所有產品
 export async function GET(request: NextRequest) {
@@ -10,10 +10,7 @@ export async function GET(request: NextRequest) {
 
     let products
 
-    if (query) {
-      // 搜尋產品
-      products = await productDB.searchProducts(query)
-    } else if (category) {
+    if (category) {
       // 根據分類取得產品
       products = await productDB.getProductsByCategory(category)
     } else {
@@ -59,7 +56,6 @@ export async function POST(request: NextRequest) {
 
     // 新增產品
     await productDB.addProduct({
-      id: productId,
       name,
       description,
       price: Number(price),

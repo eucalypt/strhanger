@@ -29,11 +29,16 @@ export default function LoginPage() {
             .then(member => {
               localStorage.setItem('memberLoggedIn', 'true')
               localStorage.setItem('memberData', JSON.stringify(member))
-              toast({ title: 'Google 登入成功', description: `歡迎回來，${member.name || member.email}` })
+              const displayName = member.name || member.email || '會員'
+              toast({ title: 'Google 登入成功', description: `歡迎回來，${displayName}` })
               setTimeout(() => {
                 window.history.replaceState({}, document.title, window.location.pathname)
                 window.location.replace('/member')
               }, 1000)
+            })
+            .catch(error => {
+              console.error('Google 登入錯誤:', error)
+              toast({ title: 'Google 登入失敗', description: '無法取得會員資料', variant: 'destructive' })
             })
         }
       } else if (params.get('error')) {

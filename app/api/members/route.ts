@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { memberDB } from '@/lib/db/members'
+import { memberDB } from '@/lib/db/supabase-db'
 import bcrypt from 'bcryptjs'
 
 // GET /api/members - 取得會員資料（需要登入）
@@ -112,6 +112,7 @@ export async function POST(request: NextRequest) {
       googleId,
       avatar,
       level: level || '一般會員',
+      points: 0,
     })
 
     // 移除敏感資訊

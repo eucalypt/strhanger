@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { categoryDB } from '@/lib/db/categories'
+import { categoryDB } from '@/lib/db/supabase-db'
 
 // GET /api/categories - 取得所有分類
 export async function GET(request: NextRequest) {
@@ -37,13 +37,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const newCategory = {
-      id: `c${Date.now()}`,
+    const newCategory = await categoryDB.addCategory({
       name,
       description: description || '',
-    }
-
-    await categoryDB.addCategory(newCategory)
+    })
     return NextResponse.json(newCategory, { status: 201 })
   } catch (error) {
     console.error('Error creating category:', error)

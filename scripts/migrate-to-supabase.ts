@@ -1,6 +1,45 @@
 import fs from 'fs'
 import path from 'path'
-import { supabase, TABLES } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+// 手動讀取 .env.local 檔案
+const envPath = path.join(process.cwd(), '.env.local')
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf-8')
+  const envLines = envContent.split('\n')
+  
+  for (const line of envLines) {
+    if (line.trim() && !line.startsWith('#')) {
+      const [key, ...valueParts] = line.split('=')
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join('=').replace(/^"|"$/g, '')
+        process.env[key.trim()] = value.trim()
+      }
+    }
+  }
+}
+
+// 手動設定 Supabase 環境變數
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+if (!supabaseUrl) {
+  throw new Error('Supabase URL is required. Please set NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL environment variable.')
+}
+
+if (!supabaseAnonKey) {
+  throw new Error('Supabase Anon Key is required. Please set NEXT_PUBLIC_SUPABASE_ANON_KEY or SUPABASE_ANON_KEY environment variable.')
+}
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// 資料庫表格名稱
+const TABLES = {
+  MEMBERS: 'members',
+  PRODUCTS: 'products',
+  CATEGORIES: 'categories',
+  ORDERS: 'orders'
+} as const
 
 // 讀取 JSON 檔案
 function readJsonFile(filename: string) {
@@ -13,97 +52,73 @@ function readJsonFile(filename: string) {
 async function createTables() {
   console.log('建立 Supabase 表格...')
 
-  // 建立 members 表格
-  const { error: membersError } = await supabase.rpc('create_members_table', {
-    sql: `
-      CREATE TABLE IF NOT EXISTS members (
-        id TEXT PRIMARY KEY,
-        email TEXT,
-        phone TEXT,
-        name TEXT NOT NULL,
-        password TEXT,
-        googleId TEXT,
-        avatar TEXT,
-        level TEXT NOT NULL DEFAULT '一般會員',
-        points INTEGER DEFAULT 0,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        last_login TIMESTAMP WITH TIME ZONE
-      );
-      
-      CREATE INDEX IF NOT EXISTS idx_members_email ON members(email);
-      CREATE INDEX IF NOT EXISTS idx_members_phone ON members(phone);
-      CREATE INDEX IF NOT EXISTS idx_members_google_id ON members(googleId);
-    `
-  })
+  // 注意：表格建立需要在 Supabase Dashboard 的 SQL Editor 中手動執行
+  // 這裡只檢查表格是否存在
+  console.log('請在 Supabase Dashboard 的 SQL Editor 中執行以下 SQL 來建立表格：')
+  console.log(`
+-- 建立 members 表格
+CREATE TABLE IF NOT EXISTS members (
+  id TEXT PRIMARY KEY,
+  email TEXT,
+  phone TEXT,
+  name TEXT NOT NULL,
+  password TEXT,
+  googleId TEXT,
+  avatar TEXT,
+  level TEXT NOT NULL DEFAULT '一般會員',
+  points INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  last_login TIMESTAMP WITH TIME ZONE
+);
 
-  if (membersError) {
-    console.log('members 表格已存在或建立失敗:', membersError.message)
-  }
+-- 建立索引
+CREATE INDEX IF NOT EXISTS idx_members_email ON members(email);
+CREATE INDEX IF NOT EXISTS idx_members_phone ON members(phone);
+CREATE INDEX IF NOT EXISTS idx_members_google_id ON members(googleId);
 
-  // 建立 products 表格
-  const { error: productsError } = await supabase.rpc('create_products_table', {
-    sql: `
-      CREATE TABLE IF NOT EXISTS products (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT,
-        price DECIMAL(10,2) NOT NULL,
-        image TEXT,
-        category TEXT,
-        inStock BOOLEAN DEFAULT true,
-        stock INTEGER DEFAULT 0,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      );
-      
-      CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
-    `
-  })
+-- 建立 products 表格
+CREATE TABLE IF NOT EXISTS products (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  image TEXT,
+  category TEXT,
+  inStock BOOLEAN DEFAULT true,
+  stock INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-  if (productsError) {
-    console.log('products 表格已存在或建立失敗:', productsError.message)
-  }
+-- 建立索引
+CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 
-  // 建立 categories 表格
-  const { error: categoriesError } = await supabase.rpc('create_categories_table', {
-    sql: `
-      CREATE TABLE IF NOT EXISTS categories (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      );
-    `
-  })
+-- 建立 categories 表格
+CREATE TABLE IF NOT EXISTS categories (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-  if (categoriesError) {
-    console.log('categories 表格已存在或建立失敗:', categoriesError.message)
-  }
+-- 建立 orders 表格
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY,
+  memberId TEXT NOT NULL,
+  items JSONB NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  status TEXT NOT NULL DEFAULT '待付款',
+  paymentMethod TEXT,
+  shippingAddress JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-  // 建立 orders 表格
-  const { error: ordersError } = await supabase.rpc('create_orders_table', {
-    sql: `
-      CREATE TABLE IF NOT EXISTS orders (
-        id TEXT PRIMARY KEY,
-        memberId TEXT NOT NULL,
-        items JSONB NOT NULL,
-        total DECIMAL(10,2) NOT NULL,
-        status TEXT NOT NULL DEFAULT '待付款',
-        paymentMethod TEXT,
-        shippingAddress JSONB,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      );
-      
-      CREATE INDEX IF NOT EXISTS idx_orders_member_id ON orders(memberId);
-    `
-  })
-
-  if (ordersError) {
-    console.log('orders 表格已存在或建立失敗:', ordersError.message)
-  }
+-- 建立索引
+CREATE INDEX IF NOT EXISTS idx_orders_member_id ON orders(memberId);
+  `)
 
   console.log('表格建立完成')
 }
@@ -118,7 +133,7 @@ async function migrateMembers() {
     for (const member of members) {
       const { error } = await supabase
         .from(TABLES.MEMBERS)
-        .upsert(member, { onConflict: 'id' })
+        .insert(member)
       
       if (error) {
         console.error('遷移會員失敗:', member.id, error.message)
@@ -143,7 +158,7 @@ async function migrateProducts() {
     for (const product of products) {
       const { error } = await supabase
         .from(TABLES.PRODUCTS)
-        .upsert(product, { onConflict: 'id' })
+        .insert(product)
       
       if (error) {
         console.error('遷移商品失敗:', product.id, error.message)

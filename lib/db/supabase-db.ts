@@ -319,7 +319,7 @@ export const orderDB = {
     const { data, error } = await supabase
       .from(TABLES.ORDERS)
       .select('*')
-      .eq('memberId', memberId)
+      .eq('memberid', memberId)
       .order('created_at', { ascending: false })
     
     if (error) throw error
@@ -331,8 +331,11 @@ export const orderDB = {
     const id = `o${Date.now()}`
     const now = new Date().toISOString()
     
+    // 修正欄位名稱
+    const { memberId, ...restData } = orderData
     const newOrder = {
-      ...orderData,
+      ...restData,
+      memberid: memberId,
       id,
       created_at: now,
       updated_at: now
