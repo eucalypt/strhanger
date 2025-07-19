@@ -3,7 +3,8 @@
 import { Search, ShoppingBag, X, User, LogIn, ChevronDown } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "motion/react"
-import Link from "next/link";
+import Link from "next/link"
+import ShinyText from "@/components/ui/shiny-text"
 
 interface TopBarProps {
   cartItemCount: number
@@ -114,9 +115,9 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
         <div className="flex items-center justify-between px-3 h-14">
           <Link
             href="/"
-            className="text-sm font-medium text-zinc-800 dark:text-zinc-200 shrink-0"
+            className="shrink-0"
           >
-            Something Right
+            <ShinyText text="Something Right" speed={3} className="text-sm" />
           </Link>
           
           <div className="flex items-center gap-2">
@@ -260,9 +261,9 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
       <div className="hidden md:flex items-center justify-between px-3 h-12">
         <Link
           href="/"
-          className="text-sm font-medium text-zinc-800 dark:text-zinc-200 shrink-0"
+          className="shrink-0"
         >
-          Something Right
+          <ShinyText text="Something Right" speed={3} className="text-sm" />
         </Link>
         <div className="flex-1 px-8 overflow-x-auto flex items-center justify-center gap-6 scrollbar-none">
           {!loading && categories.map((category) => (

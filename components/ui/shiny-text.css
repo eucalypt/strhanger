@@ -1,0 +1,69 @@
+.shiny-text {
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #1f2937 0%,
+    #fbbf24 25%,
+    #ffffff 50%,
+    #fbbf24 75%,
+    #1f2937 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 5s linear infinite;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.shiny-text:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.shiny-text.disabled {
+  animation: none;
+  background: #666666;
+  -webkit-text-fill-color: #666666;
+  cursor: default;
+}
+
+.shiny-text.disabled:hover {
+  transform: none;
+  filter: none;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .shiny-text {
+    background: linear-gradient(
+      90deg,
+      #f3f4f6 0%,
+      #fbbf24 25%,
+      #ffffff 50%,
+      #fbbf24 75%,
+      #f3f4f6 100%
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .shiny-text.disabled {
+    background: #666666;
+    -webkit-text-fill-color: #666666;
+  }
+} 
