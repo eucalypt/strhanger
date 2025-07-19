@@ -55,7 +55,7 @@ export const memberDB = {
     const { data, error } = await supabase
       .from(TABLES.MEMBERS)
       .select('*')
-      .eq('googleId', googleId)
+      .eq('googleid', googleId)
       .single()
     
     if (error) return null

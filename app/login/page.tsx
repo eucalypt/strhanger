@@ -30,7 +30,14 @@ export default function LoginPage() {
               localStorage.setItem('memberLoggedIn', 'true')
               localStorage.setItem('memberData', JSON.stringify(member))
               const displayName = member.name || member.email || '會員'
-              toast({ title: 'Google 登入成功', description: `歡迎回來，${displayName}` })
+              
+              // 檢查是否為管理員，但都留在前台
+              if (member.level === '管理員') {
+                localStorage.setItem('adminLoggedIn', 'true')
+                toast({ title: 'Google 管理員登入成功', description: `歡迎管理員，${displayName}` })
+              } else {
+                toast({ title: 'Google 登入成功', description: `歡迎回來，${displayName}` })
+              }
               setTimeout(() => {
                 window.history.replaceState({}, document.title, window.location.pathname)
                 window.location.replace('/member')
@@ -82,11 +89,19 @@ export default function LoginPage() {
       localStorage.setItem('memberLoggedIn', 'true')
       localStorage.setItem('memberData', JSON.stringify(data.member))
 
-      toast({
-        title: "成功",
-        description: "登入成功！",
-      })
-
+      // 檢查是否為管理員，但都留在前台
+      if (data.member.level === '管理員') {
+        localStorage.setItem('adminLoggedIn', 'true')
+        toast({
+          title: "成功",
+          description: "管理員登入成功！",
+        })
+      } else {
+        toast({
+          title: "成功",
+          description: "登入成功！",
+        })
+      }
       router.push('/member')
     } catch (error: any) {
       toast({

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { memberDB } from '@/lib/db/members'
+import { memberDB } from '@/lib/db/supabase-db'
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code')
@@ -54,6 +54,7 @@ export async function GET(request: NextRequest) {
         googleId: user.id,
         avatar: user.picture,
         level: '一般會員',
+        points: 0,
       })
     }
   }
