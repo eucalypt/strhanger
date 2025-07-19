@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { categoryDB } from '@/lib/db/categories'
+import { categoryDB } from '@/lib/db/supabase-db'
 
 // PUT /api/categories/[id] - 更新分類
 export async function PUT(

@@ -286,6 +286,18 @@ export const categoryDB = {
       .eq('id', id)
     
     if (error) throw error
+  },
+
+  // 檢查分類是否被使用
+  async isCategoryUsed(categoryName: string): Promise<boolean> {
+    const { data, error } = await supabase
+      .from(TABLES.PRODUCTS)
+      .select('id')
+      .eq('category', categoryName)
+      .limit(1)
+    
+    if (error) throw error
+    return (data && data.length > 0)
   }
 }
 
@@ -331,11 +343,8 @@ export const orderDB = {
     const id = `o${Date.now()}`
     const now = new Date().toISOString()
     
-    // 修正欄位名稱
-    const { memberId, ...restData } = orderData
     const newOrder = {
-      ...restData,
-      memberid: memberId,
+      ...orderData,
       id,
       created_at: now,
       updated_at: now

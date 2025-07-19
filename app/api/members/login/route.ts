@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { memberDB } from '@/lib/db/members'
+import { memberDB } from '@/lib/db/supabase-db'
 import bcrypt from 'bcryptjs'
 
 // POST /api/members/login - 會員登入

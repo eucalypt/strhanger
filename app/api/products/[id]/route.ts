@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { productDB } from '@/lib/db/database'
+import { productDB } from '@/lib/db/supabase-db'
 
 // GET /api/products/[id] - 取得單一產品
 export async function GET(
