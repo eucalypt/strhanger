@@ -115,11 +115,7 @@ export default function RegisterPage() {
   }
 
   const handleGoogleLogin = () => {
-    // TODO: 實作 Google SSO
-    toast({
-      title: "功能開發中",
-      description: "Google 登入功能正在開發中",
-    })
+    window.location.href = '/api/auth/google'
   }
 
   return (
