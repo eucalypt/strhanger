@@ -23,9 +23,10 @@
 - 支援預覽功能
 
 ### 📊 資料管理
-- 商品資料儲存在 `data/products.json`
+- 所有資料儲存在 **Supabase 雲端資料庫**
 - 支援分類管理
 - 完整的 CRUD 操作
+- 即時同步和多用戶支援
 
 ## 使用方式
 
@@ -90,7 +91,7 @@ http://localhost:3000/admin
 
 - **前端**：Next.js 15 + React 19 + TypeScript
 - **UI 組件**：shadcn/ui
-- **資料儲存**：JSON 檔案系統
+- **資料儲存**：Supabase 雲端資料庫
 - **圖片儲存**：本地檔案系統
 - **狀態管理**：React Hooks
 - **路由**：Next.js App Router
@@ -144,6 +145,6 @@ data/
 ## 部署注意事項
 
 1. 確保 `public/images/` 目錄有寫入權限
-2. 確保 `data/` 目錄有讀寫權限
-3. 生產環境建議使用資料庫而非 JSON 檔案
+2. 設定 Supabase 環境變數（NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY）
+3. 確保 Supabase 資料庫已正確配置
 4. 實作適當的錯誤處理和日誌記錄 
