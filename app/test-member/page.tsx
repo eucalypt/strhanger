@@ -25,14 +25,16 @@ export default function TestMemberPage() {
   useEffect(() => {
     // 測試設定會員登入狀態
     console.log('Setting test member login status...')
-    localStorage.setItem('memberLoggedIn', 'true')
-    localStorage.setItem('memberData', JSON.stringify({
-      id: 'test-member',
-      name: '測試會員',
-      email: 'test@example.com',
-      level: '一般會員',
-      points: 100
-    }))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('memberLoggedIn', 'true')
+      localStorage.setItem('memberData', JSON.stringify({
+        id: 'test-member',
+        name: '測試會員',
+        email: 'test@example.com',
+        level: '一般會員',
+        points: 100
+      }))
+    }
   }, [])
 
   return (
@@ -54,15 +56,17 @@ export default function TestMemberPage() {
             <div className="space-y-2">
               <button 
                 onClick={() => {
-                  localStorage.setItem('memberLoggedIn', 'true')
-                  localStorage.setItem('memberData', JSON.stringify({
-                    id: 'test-member',
-                    name: '測試會員',
-                    email: 'test@example.com',
-                    level: '一般會員',
-                    points: 100
-                  }))
-                  window.location.reload()
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem('memberLoggedIn', 'true')
+                    localStorage.setItem('memberData', JSON.stringify({
+                      id: 'test-member',
+                      name: '測試會員',
+                      email: 'test@example.com',
+                      level: '一般會員',
+                      points: 100
+                    }))
+                    window.location.reload()
+                  }
                 }}
                 className="px-4 py-2 bg-blue-500 text-white rounded"
               >
@@ -71,9 +75,11 @@ export default function TestMemberPage() {
               
               <button 
                 onClick={() => {
-                  localStorage.removeItem('memberLoggedIn')
-                  localStorage.removeItem('memberData')
-                  window.location.reload()
+                  if (typeof window !== 'undefined') {
+                    localStorage.removeItem('memberLoggedIn')
+                    localStorage.removeItem('memberData')
+                    window.location.reload()
+                  }
                 }}
                 className="px-4 py-2 bg-red-500 text-white rounded ml-2"
               >
@@ -92,7 +98,7 @@ export default function TestMemberPage() {
           <div>
             <h2 className="text-lg font-semibold mb-2">目前狀態</h2>
             <div className="text-sm space-y-1">
-              <p>會員登入狀態: {localStorage.getItem('memberLoggedIn') === 'true' ? '已登入' : '未登入'}</p>
+              <p>會員登入狀態: {typeof window !== 'undefined' && localStorage.getItem('memberLoggedIn') === 'true' ? '已登入' : '未登入'}</p>
               <p>購物車數量: {cartItemCount}</p>
               <p>搜尋查詢: {searchQuery}</p>
               <p>選中分類: {selectedCategory}</p>
