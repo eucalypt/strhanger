@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { memberDB } from '@/lib/db/members'
+import { memberDB } from '@/lib/db/supabase-db'
 
 // GET /api/members/all - 取得所有會員資料
 export async function GET(request: NextRequest) {
