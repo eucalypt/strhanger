@@ -117,7 +117,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
             href="/"
             className="shrink-0"
           >
-            <ShinyText text="Something Right" speed={5} className="text-lg font-bold" />
+            <ShinyText text="Something Right" speed={5} className="text-xl font-bold" />
           </Link>
           
           <div className="flex items-center gap-2">
@@ -263,7 +263,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
           href="/"
           className="shrink-0"
         >
-          <ShinyText text="Something Right" speed={5} className="text-lg font-bold" />
+          <ShinyText text="Something Right" speed={5} className="text-xl font-bold" />
         </Link>
         <div className="flex-1 px-8 overflow-x-auto flex items-center justify-center gap-6 scrollbar-none">
           {!loading && categories.map((category) => (
