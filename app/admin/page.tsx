@@ -21,7 +21,7 @@ interface Product {
   category: string
   image: string
   stock: number
-  inStock: boolean
+  instock: boolean
 }
 
 interface Category {
@@ -337,8 +337,8 @@ export default function AdminPage() {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <CardTitle className="text-lg">{product.name}</CardTitle>
-                  <Badge variant={product.inStock ? "default" : "secondary"}>
-                    {product.inStock ? "有庫存" : "缺貨"}
+                  <Badge variant={product.instock ? "default" : "secondary"}>
+                    {product.instock ? "有庫存" : "缺貨"}
                   </Badge>
                 </div>
               </CardHeader>

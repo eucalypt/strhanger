@@ -2,6 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 自定義滾動條隱藏 */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* 手機版觸控優化 */
+@media (max-width: 768px) {
+  /* 改善按鈕觸控區域 */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 改善輸入框觸控體驗 */
+  input, textarea {
+    font-size: 16px; /* 防止iOS縮放 */
+  }
+  
+  /* 改善滾動體驗 */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* 動畫效果 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

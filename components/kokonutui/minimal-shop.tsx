@@ -8,6 +8,9 @@ import { ProductModal } from "./product-modal"
 import { TopBar } from "./top-bar"
 import { useProducts, type Product, type CartItem } from "@/hooks/use-products"
 
+// localStorage 鍵名
+const CART_STORAGE_KEY = 'shopping_cart'
+
 export default function MinimalShop() {
   const { products, loading, error, fetchProducts } = useProducts()
   const [cart, setCart] = useState<CartItem[]>([])
@@ -15,6 +18,29 @@ export default function MinimalShop() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("全部")
+
+  // 從 localStorage 載入購物車數據
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem(CART_STORAGE_KEY)
+      if (savedCart) {
+        try {
+          const parsedCart = JSON.parse(savedCart)
+          setCart(parsedCart)
+        } catch (error) {
+          console.error('Error parsing saved cart:', error)
+          localStorage.removeItem(CART_STORAGE_KEY)
+        }
+      }
+    }
+  }, [])
+
+  // 當購物車變更時，保存到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
+    }
+  }, [cart])
 
   // 處理搜尋
   const handleSearch = async (query: string) => {
@@ -50,12 +76,23 @@ export default function MinimalShop() {
     )
   }
 
+  // 清空購物車
+  const clearCart = () => {
+    setCart([])
+  }
+
+  // 計算購物車總價
+  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  // 計算購物車商品總數
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+
   if (loading) {
     return (
       <div className="h-screen bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 dark:border-white mx-auto"></div>
-          <p className="mt-4 text-zinc-600 dark:text-zinc-400">載入中...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900 dark:border-white mx-auto mb-4"></div>
+          <p className="text-zinc-600 dark:text-zinc-400">載入中...</p>
         </div>
       </div>
     )
@@ -65,10 +102,10 @@ export default function MinimalShop() {
     return (
       <div className="h-screen bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 dark:text-red-400">錯誤: {error}</p>
-          <button 
-            onClick={() => fetchProducts()} 
-            className="mt-4 px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-md"
+          <p className="text-red-600 dark:text-red-400 mb-4">載入失敗: {error}</p>
+          <button
+            onClick={() => fetchProducts()}
+            className="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-md hover:bg-zinc-800 dark:hover:bg-zinc-100"
           >
             重試
           </button>
@@ -80,14 +117,14 @@ export default function MinimalShop() {
   return (
     <div className="h-screen bg-zinc-50 dark:bg-zinc-950">
       <TopBar 
-        cartItemCount={cart.length} 
+        cartItemCount={cartItemCount} 
         onCartClick={() => setIsCartOpen(true)} 
         onSearch={handleSearch}
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
 
-      <div className="mx-auto px-2 pt-12 pb-16">
+      <div className="mx-auto px-2 pt-16 md:pt-12 pb-16">
         <ProductGrid products={products} onProductSelect={setSelectedProduct} />
       </div>
 
@@ -112,6 +149,8 @@ export default function MinimalShop() {
             onClose={() => setIsCartOpen(false)} 
             onRemoveFromCart={removeFromCart}
             onUpdateQuantity={updateCartItemQuantity}
+            onClearCart={clearCart}
+            cartTotal={cartTotal}
           />
         )}
       </AnimatePresence>

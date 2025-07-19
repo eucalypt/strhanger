@@ -209,7 +209,7 @@ export const productDB = {
       .from(TABLES.PRODUCTS)
       .update({
         stock: quantity,
-        inStock: quantity > 0,
+        instock: quantity > 0,
         updated_at: new Date().toISOString()
       })
       .eq('id', id)

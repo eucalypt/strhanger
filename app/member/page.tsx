@@ -23,23 +23,12 @@ interface Member {
 
 interface Order {
   id: string
-  items: Array<{
-    name: string
-    price: number
-    quantity: number
-    image: string
-  }>
+  memberid: string
+  items: string // JSON字符串
   total: number
   status: '待付款' | '已付款' | '處理中' | '已出貨' | '已完成' | '已取消'
-  paymentMethod: '信用卡' | '轉帳' | '貨到付款'
-  shippingAddress: {
-    name: string
-    phone: string
-    address: string
-    city: string
-    postalCode: string
-  }
   created_at: string
+  updated_at: string
 }
 
 export default function MemberPage() {
@@ -63,6 +52,46 @@ export default function MemberPage() {
   const router = useRouter()
 
   useEffect(() => {
+    // 處理 Google 登入參數
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('google') === '1') {
+        const memberId = params.get('memberId')
+        if (memberId) {
+          fetch(`/api/members?id=${memberId}`)
+            .then(res => res.json())
+            .then(member => {
+              localStorage.setItem('memberLoggedIn', 'true')
+              localStorage.setItem('memberData', JSON.stringify(member))
+              setMember(member)
+              setFormData({
+                name: member.name,
+                email: member.email || '',
+                phone: member.phone || ''
+              })
+              fetchOrders(member.id)
+              
+              const displayName = member.name || member.email || '會員'
+              if (member.level === '管理員') {
+                localStorage.setItem('adminLoggedIn', 'true')
+                toast({ title: 'Google 管理員登入成功', description: `歡迎管理員，${displayName}` })
+              } else {
+                toast({ title: 'Google 登入成功', description: `歡迎回來，${displayName}` })
+              }
+              
+              // 清除 URL 參數
+              window.history.replaceState({}, document.title, window.location.pathname)
+            })
+            .catch(error => {
+              console.error('Google 登入錯誤:', error)
+              toast({ title: 'Google 登入失敗', description: '無法取得會員資料', variant: 'destructive' })
+              router.push('/login')
+            })
+          return
+        }
+      }
+    }
+
     // 檢查會員登入狀態
     const isLoggedIn = localStorage.getItem('memberLoggedIn') === 'true'
     if (!isLoggedIn) {
@@ -337,6 +366,9 @@ export default function MemberPage() {
                   <Button variant="secondary" onClick={() => setShowPasswordForm(v => !v)}>
                     {showPasswordForm ? '取消修改密碼' : '修改密碼'}
                   </Button>
+                  <Button variant="outline" onClick={() => router.push('/member/orders')}>
+                    查看完整訂單
+                  </Button>
                 </div>
                 {showPasswordForm && (
                   <form onSubmit={handleChangePassword} className="mt-6 space-y-4 max-w-md mx-auto bg-zinc-50 p-4 rounded border border-zinc-200">
@@ -389,43 +421,59 @@ export default function MemberPage() {
                 {orders.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-gray-500">尚無訂單記錄</p>
+                    <Button 
+                      onClick={() => router.push('/')} 
+                      className="mt-4"
+                    >
+                      開始購物
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {orders.map((order) => (
-                      <Card key={order.id} className="p-4">
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <h3 className="font-semibold">訂單 #{order.id}</h3>
-                            <p className="text-sm text-gray-600">
-                              {new Date(order.created_at).toLocaleDateString('zh-TW')}
-                            </p>
-                          </div>
-                          <Badge className={getStatusColor(order.status)}>
-                            {order.status}
-                          </Badge>
-                        </div>
-
-                        <div className="space-y-2 mb-4">
-                          {order.items.map((item, index) => (
-                            <div key={index} className="flex justify-between items-center">
-                              <span>{item.name} x {item.quantity}</span>
-                              <span>NT$ {item.price}</span>
+                    {orders.map((order) => {
+                      const items = (() => {
+                        try {
+                          return JSON.parse(order.items)
+                        } catch {
+                          return []
+                        }
+                      })()
+                      
+                      return (
+                        <Card key={order.id} className="p-4">
+                          <div className="flex justify-between items-start mb-4">
+                            <div>
+                              <h3 className="font-semibold">訂單 #{order.id}</h3>
+                              <p className="text-sm text-gray-600">
+                                {new Date(order.created_at).toLocaleDateString('zh-TW')}
+                              </p>
                             </div>
-                          ))}
-                        </div>
+                            <Badge className={getStatusColor(order.status)}>
+                              {order.status}
+                            </Badge>
+                          </div>
 
-                        <div className="border-t pt-4">
-                          <div className="flex justify-between items-center">
-                            <span className="font-semibold">總計</span>
-                            <span className="font-semibold">NT$ {order.total}</span>
+                          <div className="space-y-2 mb-4">
+                            {items.map((item: any, index: number) => (
+                              <div key={index} className="flex justify-between items-center">
+                                <span>{item.name} x {item.quantity}</span>
+                                <span>NT$ {item.price * item.quantity}</span>
+                              </div>
+                            ))}
                           </div>
-                          <div className="text-sm text-gray-600 mt-1">
-                            付款方式: {order.paymentMethod}
+
+                          <div className="border-t pt-4">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold">總計</span>
+                              <span className="font-semibold">NT$ {order.total}</span>
+                            </div>
+                            <div className="text-sm text-gray-600 mt-1">
+                              付款方式: 到店付款
+                            </div>
                           </div>
-                        </div>
-                      </Card>
-                    ))}
+                        </Card>
+                      )
+                    })}
                   </div>
                 )}
               </CardContent>

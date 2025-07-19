@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { orderDB, productDB } from '@/lib/db/supabase-db'
 
-// GET /api/orders - 取得會員訂單
+// GET /api/orders - 取得訂單
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -20,15 +20,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(order)
     }
 
-    if (!memberId) {
-      return NextResponse.json(
-        { error: 'Member ID is required' },
-        { status: 400 }
-      )
+    if (memberId) {
+      // 取得特定會員的所有訂單
+      const orders = await orderDB.getOrdersByMemberId(memberId)
+      return NextResponse.json(orders)
     }
 
-    // 取得會員的所有訂單
-    const orders = await orderDB.getOrdersByMemberId(memberId)
+    // 沒有提供memberId時，取得所有訂單（後台管理用）
+    const orders = await orderDB.getAllOrders()
     return NextResponse.json(orders)
   } catch (error) {
     console.error('Error fetching orders:', error)
@@ -43,7 +42,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { memberId, items, total, paymentMethod, shippingAddress } = body
+    const { memberId, items, total, pickupInfo } = body
 
     // 驗證必填欄位
     if (!memberId) {
@@ -67,16 +66,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!paymentMethod) {
+    if (!pickupInfo || !pickupInfo.name || !pickupInfo.phone) {
       return NextResponse.json(
-        { error: 'Payment method is required' },
-        { status: 400 }
-      )
-    }
-
-    if (!shippingAddress) {
-      return NextResponse.json(
-        { error: 'Shipping address is required' },
+        { error: 'Pickup information is required' },
         { status: 400 }
       )
     }
@@ -91,6 +83,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `商品「${item.name}」庫存不足` }, { status: 400 })
       }
     }
+
     // 扣減庫存
     for (const item of items) {
       const product = await productDB.getProductById(item.productId)
@@ -99,14 +92,15 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const newOrder = await orderDB.addOrder({
+    // 使用最基本的訂單資料結構
+    const orderData = {
       memberId,
-      items,
+      items: JSON.stringify(items),
       total,
-      status: '待付款',
-      paymentMethod,
-      shippingAddress,
-    })
+      status: '待付款' as const
+    }
+
+    const newOrder = await orderDB.addOrder(orderData)
 
     return NextResponse.json(newOrder, { status: 201 })
   } catch (error) {

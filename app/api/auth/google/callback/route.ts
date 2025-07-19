@@ -61,10 +61,10 @@ export async function GET(request: NextRequest) {
   // 再次查詢，確保 member 為最新資料
   member = await memberDB.getMemberById(member!.id)
 
-  // 設定登入狀態（localStorage 需前端處理，這裡用 redirect 帶參數）
+  // 直接重定向到會員中心，並帶上登入參數
   const params = new URLSearchParams({
     google: '1',
     memberId: member!.id,
   })
-  return NextResponse.redirect(new URL(`/login?${params.toString()}`, request.url))
+  return NextResponse.redirect(new URL(`/member?${params.toString()}`, request.url))
 }

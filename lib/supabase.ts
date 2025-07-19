@@ -50,7 +50,7 @@ export interface Product {
   price: number
   image: string
   category: string
-  inStock: boolean
+  instock: boolean // 修正為小寫以匹配資料庫
   stock: number
   created_at: string
   updated_at: string
@@ -68,24 +68,12 @@ export interface Category {
 // 訂單資料類型
 export interface Order {
   id: string
-  memberId: string
-  items: Array<{
-    productId: string
-    name: string
-    price: number
-    quantity: number
-    image: string
-  }>
+  memberid: string // 修正為小寫以匹配資料庫
+  items: string // JSON字符串
   total: number
   status: '待付款' | '已付款' | '處理中' | '已出貨' | '已完成' | '已取消'
-  paymentMethod: '信用卡' | '轉帳' | '貨到付款'
-  shippingAddress: {
-    name: string
-    phone: string
-    address: string
-    city: string
-    postalCode: string
-  }
+  paymentmethod?: string | null
+  shippingaddress?: string | null
   created_at: string
   updated_at: string
 } 

@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       image: image || '',
       category,
       stock: stock !== undefined ? Number(stock) : 0,
-      inStock: stock !== undefined ? Number(stock) > 0 : false
+      instock: stock !== undefined ? Number(stock) > 0 : false
     })
 
     return NextResponse.json(
@@ -102,13 +102,15 @@ export async function PUT(request: NextRequest) {
     }
 
     // 更新產品
+    const newStock = stock !== undefined ? Number(stock) : existingProduct.stock
     await productDB.updateProduct(id, {
       name,
       description,
       price: Number(price),
       image: image || '',
       category,
-      stock: stock !== undefined ? Number(stock) : undefined
+      stock: newStock,
+      instock: newStock > 0
     })
 
     return NextResponse.json(
