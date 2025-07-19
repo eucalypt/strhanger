@@ -129,7 +129,7 @@ export const categoryDB = {
 
   // 檢查分類是否被使用
   async isCategoryUsed(categoryName: string): Promise<boolean> {
-    const { productDB } = await import('./database')
+    const { productDB } = await import('./supabase-db')
     const products = await productDB.getAllProducts()
     return products.some((product: any) => product.category === categoryName)
   },
