@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { writeFile, mkdir } from 'fs/promises'
+import path from 'path'
 
-// POST /api/upload - 上傳圖片到 Supabase Storage
+// POST /api/upload - 上傳圖片（臨時使用本地儲存）
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
@@ -32,40 +33,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 確保 images 目錄存在
+    const imagesDir = path.join(process.cwd(), 'public', 'images')
+    await mkdir(imagesDir, { recursive: true })
+
     // 生成唯一檔名
     const timestamp = Date.now()
     const fileExtension = file.name.split('.').pop()
     const fileName = `${timestamp}.${fileExtension}`
+    const filePath = path.join(imagesDir, fileName)
 
-    // 將檔案轉換為 ArrayBuffer
+    // 將檔案寫入磁碟
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
+    await writeFile(filePath, buffer)
 
-    // 上傳到 Supabase Storage
-    const { data, error } = await supabase.storage
-      .from('product-images') // Storage bucket 名稱
-      .upload(fileName, buffer, {
-        contentType: file.type,
-        cacheControl: '3600',
-        upsert: false
-      })
-
-    if (error) {
-      console.error('Supabase Storage upload error:', error)
-      return NextResponse.json(
-        { error: 'Failed to upload file to cloud storage' },
-        { status: 500 }
-      )
-    }
-
-    // 取得公開URL
-    const { data: urlData } = supabase.storage
-      .from('product-images')
-      .getPublicUrl(fileName)
+    // 返回檔案 URL
+    const fileUrl = `/images/${fileName}`
 
     return NextResponse.json({
-      message: 'File uploaded successfully to cloud storage',
-      url: urlData.publicUrl,
+      message: 'File uploaded successfully',
+      url: fileUrl,
       fileName: fileName
     })
   } catch (error) {
