@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { productDB } from '@/lib/db/supabase-db'
+import { storageDB } from '@/lib/supabase-storage'
 
 // GET /api/products/[id] - 取得單一產品
 export async function GET(
@@ -91,11 +92,27 @@ export async function DELETE(
       )
     }
 
+    // 如果產品有圖片，從 Storage 中刪除
+    if (existingProduct.image) {
+      try {
+        // 從 URL 中提取檔案名稱
+        const imageUrl = existingProduct.image
+        const fileName = imageUrl.split('/').pop()
+        
+        if (fileName) {
+          await storageDB.deleteImage(fileName)
+        }
+      } catch (storageError) {
+        console.error('Error deleting image from storage:', storageError)
+        // 即使圖片刪除失敗，也繼續刪除產品
+      }
+    }
+
     // 刪除產品
     await productDB.deleteProduct(id)
 
     return NextResponse.json(
-      { message: 'Product deleted successfully' },
+      { message: 'Product and associated image deleted successfully' },
       { status: 200 }
     )
   } catch (error) {
