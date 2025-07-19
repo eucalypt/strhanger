@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { memberDB } from '@/lib/db/members'
+import { memberDB } from '@/lib/db/supabase-db'
 import bcrypt from 'bcryptjs'
 
 // PUT /api/members/[id] - 更新會員資料
