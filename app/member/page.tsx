@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { toast } from '@/hooks/use-toast'
 
 interface Member {
@@ -271,29 +272,30 @@ export default function MemberPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-lg">載入中...</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 flex items-center justify-center">
+        <div className="text-lg dark:text-gray-100">載入中...</div>
       </div>
     )
   }
 
   if (!member) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-lg">請先登入</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 flex items-center justify-center">
+        <div className="text-lg dark:text-gray-100">請先登入</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
+      <div className="bg-white dark:bg-zinc-900 shadow dark:shadow-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">會員中心</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">會員中心</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <Button 
                 variant="outline" 
                 onClick={() => member?.id && fetchLatestMemberData(member.id)}
@@ -330,7 +332,7 @@ export default function MemberPage() {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       姓名
                     </label>
                     <Input
@@ -341,7 +343,7 @@ export default function MemberPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       電子郵件
                     </label>
                     <Input
@@ -352,7 +354,7 @@ export default function MemberPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       手機號碼
                     </label>
                     <Input
@@ -363,7 +365,7 @@ export default function MemberPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       會員等級
                     </label>
                     <Badge variant={member.level === 'VIP' ? 'default' : 'secondary'}>
@@ -372,19 +374,19 @@ export default function MemberPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       會員點數
                     </label>
-                    <div className="text-lg font-semibold text-blue-600">
+                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                       {member.points} 點
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       註冊時間
                     </label>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       {new Date(member.created_at).toLocaleDateString('zh-TW')}
                     </div>
                   </div>
@@ -413,9 +415,9 @@ export default function MemberPage() {
                   </Button>
                 </div>
                 {showPasswordForm && (
-                  <form onSubmit={handleChangePassword} className="mt-6 space-y-4 max-w-md mx-auto bg-zinc-50 p-4 rounded border border-zinc-200">
+                  <form onSubmit={handleChangePassword} className="mt-6 space-y-4 max-w-md mx-auto bg-zinc-50 dark:bg-zinc-900 p-4 rounded border border-zinc-200 dark:border-zinc-700">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">舊密碼</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">舊密碼</label>
                       <Input
                         type="password"
                         value={passwordForm.oldPassword}
@@ -424,7 +426,7 @@ export default function MemberPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">新密碼</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">新密碼</label>
                       <Input
                         type="password"
                         value={passwordForm.newPassword}
@@ -433,7 +435,7 @@ export default function MemberPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">確認新密碼</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">確認新密碼</label>
                       <Input
                         type="password"
                         value={passwordForm.confirmNewPassword}
@@ -441,7 +443,7 @@ export default function MemberPage() {
                         required
                       />
                     </div>
-                    {passwordError && <div className="text-red-600 text-sm text-center font-medium">{passwordError}</div>}
+                    {passwordError && <div className="text-red-600 dark:text-red-400 text-sm text-center font-medium">{passwordError}</div>}
                     <Button type="submit" className="w-full" disabled={passwordLoading}>
                       {passwordLoading ? '修改中...' : '確認修改密碼'}
                     </Button>
@@ -462,7 +464,7 @@ export default function MemberPage() {
               <CardContent>
                 {orders.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">尚無訂單記錄</p>
+                    <p className="text-gray-500 dark:text-gray-400">尚無訂單記錄</p>
                     <Button 
                       onClick={() => router.push('/')} 
                       className="mt-4"

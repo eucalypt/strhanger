@@ -1,6 +1,6 @@
 import { Search, ShoppingBag } from "lucide-react"
-
 import { Menu } from "lucide-react"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 interface HeaderProps {
   cartCount: number
@@ -34,18 +34,21 @@ export function Header({ cartCount, onCartOpen, searchQuery, onSearchChange }: H
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onCartOpen}
-            className="relative p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] font-medium flex items-center justify-center bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-full">
-                {cartCount}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={onCartOpen}
+              className="relative p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] font-medium flex items-center justify-center bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-full">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </header>
