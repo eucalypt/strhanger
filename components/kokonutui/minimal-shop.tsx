@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence } from "motion/react"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { ProductGrid } from "./product-grid"
 import { CartDrawer } from "./cart-drawer"
 import { ProductModal } from "./product-modal"
@@ -53,7 +53,7 @@ export default function MinimalShop() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
-    }, 300) // 300ms 延遲
+    }, 500) // 增加到 500ms 延遲，給用戶更多時間完成輸入
 
     return () => clearTimeout(timer)
   }, [searchQuery])
@@ -74,6 +74,12 @@ export default function MinimalShop() {
     
     performSearch()
   }, [debouncedSearchQuery, selectedCategory]) // 移除 fetchProducts 依賴項，因為它現在是穩定的 useCallback
+
+  // 記憶化搜尋參數，避免不必要的重新渲染
+  const searchParams = useMemo(() => ({
+    category: selectedCategory === "全部" ? undefined : selectedCategory,
+    query: debouncedSearchQuery || undefined
+  }), [selectedCategory, debouncedSearchQuery])
 
   // 處理搜尋
   const handleSearch = (query: string) => {

@@ -44,13 +44,22 @@ function SearchInput({
   onSearchValueChange?: (value: string) => void
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus()
       inputRef.current.select()
+      setIsFocused(true)
     }
   }, [isOpen])
+
+  // 保持輸入框焦點
+  useEffect(() => {
+    if (isFocused && inputRef.current && document.activeElement !== inputRef.current) {
+      inputRef.current.focus()
+    }
+  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -63,16 +72,31 @@ function SearchInput({
       onSearchValueChange?.("")
       onSearch("")
       onClose()
+      setIsFocused(false)
     } else if (e.key === "Enter") {
       e.preventDefault()
       onSearch(searchValue)
     }
   }
 
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    // 延遲設置焦點狀態，避免立即失去焦點
+    setTimeout(() => {
+      if (!isOpen) {
+        setIsFocused(false)
+      }
+    }, 100)
+  }
+
   const handleClose = () => {
     onSearchValueChange?.("")
     onSearch("")
     onClose()
+    setIsFocused(false)
   }
 
   if (!isOpen) return null
@@ -90,6 +114,8 @@ function SearchInput({
                   transition-all duration-200"
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <button
         type="button"
