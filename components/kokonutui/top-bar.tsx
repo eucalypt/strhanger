@@ -407,16 +407,17 @@ export function TopBar({
             searchValue={searchValue}
             onSearchValueChange={onSearchValueChange}
           />
-          <button
-            type="button"
-            onClick={() => onSearchToggle?.()}
-            className={`p-1.5 rounded-md transition-colors text-zinc-700 dark:text-zinc-300 ${
-              isSearchOpen ? "bg-zinc-100 dark:bg-zinc-800" : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            }`}
-            title="搜尋商品"
-          >
-            <Search className="w-4 h-4" />
-          </button>
+          {/* 只在搜尋框關閉時顯示搜尋按鈕 */}
+          {!isSearchOpen && (
+            <button
+              type="button"
+              onClick={() => onSearchToggle?.()}
+              className="p-1.5 rounded-md transition-colors text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              title="搜尋商品"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          )}
           
           {/* 會員登入/註冊下拉選單 */}
           <div className="relative" ref={memberMenuRef}>
