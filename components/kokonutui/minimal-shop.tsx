@@ -60,16 +60,16 @@ export default function MinimalShop() {
 
   // 當防抖搜尋查詢變更時，執行搜尋
   useEffect(() => {
-    // 避免初始化時的無意義搜尋
-    if (debouncedSearchQuery === "" && searchQuery === "") {
-      return
-    }
-    
     const performSearch = async () => {
-      await fetchProducts(
-        selectedCategory === "全部" ? undefined : selectedCategory, 
-        debouncedSearchQuery || undefined
-      )
+      // 當搜尋查詢為空且分類為"全部"時，不傳遞任何參數來獲取全部商品
+      if (debouncedSearchQuery === "" && selectedCategory === "全部") {
+        await fetchProducts()
+      } else {
+        await fetchProducts(
+          selectedCategory === "全部" ? undefined : selectedCategory, 
+          debouncedSearchQuery || undefined
+        )
+      }
     }
     
     performSearch()
