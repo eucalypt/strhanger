@@ -296,19 +296,20 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
             </Link>
           )}
           <ThemeToggle />
-          <motion.div className="relative" initial={false} animate={{ width: isSearchOpen ? "auto" : 0 }}>
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="搜尋商品..."
-              className={`w-48 sm:w-56 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm px-3 py-1.5 
-                                text-zinc-800 dark:text-zinc-200
-                                focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700
-                                transition-all duration-200 ${isSearchOpen ? "opacity-100" : "opacity-0"}`}
-              onChange={(e) => onSearch(e.target.value)}
-              onKeyDown={handleKeyPress}
-            />
-            {isSearchOpen && (
+          {isSearchOpen && (
+            <div className="relative">
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="搜尋商品..."
+                className="w-48 sm:w-56 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm px-3 py-1.5 
+                              text-zinc-800 dark:text-zinc-200
+                              focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700
+                              transition-all duration-200"
+                onChange={(e) => onSearch(e.target.value)}
+                onKeyDown={handleKeyPress}
+                autoFocus
+              />
               <button
                 type="button"
                 onClick={() => {
@@ -316,12 +317,12 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
                   onSearch("")
                 }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-zinc-200 
-                                    dark:hover:bg-zinc-700 rounded-full text-zinc-600 dark:text-zinc-400"
+                                  dark:hover:bg-zinc-700 rounded-full text-zinc-600 dark:text-zinc-400"
               >
                 <X className="w-4 h-4" />
               </button>
-            )}
-          </motion.div>
+            </div>
+          )}
           <button
             type="button"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
