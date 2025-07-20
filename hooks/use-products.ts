@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export interface Product {
   id: string
@@ -23,7 +23,7 @@ export function useProducts() {
   const [error, setError] = useState<string | null>(null)
 
   // 取得所有產品
-  const fetchProducts = async (category?: string, query?: string) => {
+  const fetchProducts = useCallback(async (category?: string, query?: string) => {
     try {
       setLoading(true)
       setError(null)
@@ -45,10 +45,10 @@ export function useProducts() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   // 取得單一產品
-  const fetchProduct = async (id: string): Promise<Product | null> => {
+  const fetchProduct = useCallback(async (id: string): Promise<Product | null> => {
     try {
       const response = await fetch(`/api/products/${id}`)
       
@@ -64,10 +64,10 @@ export function useProducts() {
       setError(err instanceof Error ? err.message : 'An error occurred')
       return null
     }
-  }
+  }, [])
 
   // 新增產品
-  const addProduct = async (product: Omit<Product, 'created_at' | 'updated_at'>) => {
+  const addProduct = useCallback(async (product: Omit<Product, 'created_at' | 'updated_at'>) => {
     try {
       const response = await fetch('/api/products', {
         method: 'POST',
@@ -89,10 +89,10 @@ export function useProducts() {
       setError(err instanceof Error ? err.message : 'An error occurred')
       return false
     }
-  }
+  }, [fetchProducts])
 
   // 更新產品
-  const updateProduct = async (id: string, product: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => {
+  const updateProduct = useCallback(async (id: string, product: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => {
     try {
       const response = await fetch(`/api/products/${id}`, {
         method: 'PUT',
@@ -114,10 +114,10 @@ export function useProducts() {
       setError(err instanceof Error ? err.message : 'An error occurred')
       return false
     }
-  }
+  }, [fetchProducts])
 
   // 刪除產品
-  const deleteProduct = async (id: string) => {
+  const deleteProduct = useCallback(async (id: string) => {
     try {
       const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
@@ -135,10 +135,10 @@ export function useProducts() {
       setError(err instanceof Error ? err.message : 'An error occurred')
       return false
     }
-  }
+  }, [fetchProducts])
 
   // 上傳圖片
-  const uploadImage = async (file: File): Promise<string | null> => {
+  const uploadImage = useCallback(async (file: File): Promise<string | null> => {
     try {
       const formData = new FormData()
       formData.append('file', file)
@@ -159,7 +159,7 @@ export function useProducts() {
       setError(err instanceof Error ? err.message : 'An error occurred')
       return null
     }
-  }
+  }, [])
 
   // 初始化時取得所有產品
   // useEffect(() => {

@@ -72,7 +72,7 @@ export default function MinimalShop() {
     }
     
     performSearch()
-  }, [debouncedSearchQuery, selectedCategory]) // 移除 fetchProducts 依賴項
+  }, [debouncedSearchQuery, selectedCategory]) // 移除 fetchProducts 依賴項，因為它現在是穩定的 useCallback
 
   // 處理搜尋
   const handleSearch = (query: string) => {
