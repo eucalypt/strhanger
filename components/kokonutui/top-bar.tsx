@@ -103,6 +103,10 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
       setIsSearchOpen(false)
       searchInputRef.current?.blur()
     }
+    // 阻止 Enter 鍵觸發表單提交
+    if (e.key === "Enter") {
+      e.preventDefault()
+    }
   }
 
   return (
@@ -221,6 +225,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
                                   border border-zinc-200 dark:border-zinc-700"
                 onChange={(e) => onSearch(e.target.value)}
                 onKeyDown={handleKeyPress}
+                onSubmit={(e) => e.preventDefault()}
                 autoFocus
               />
               <button
@@ -308,6 +313,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
                               transition-all duration-200"
                 onChange={(e) => onSearch(e.target.value)}
                 onKeyDown={handleKeyPress}
+                onSubmit={(e) => e.preventDefault()}
                 autoFocus
               />
               <button
