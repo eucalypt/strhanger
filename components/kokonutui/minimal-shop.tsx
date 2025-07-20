@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence } from "motion/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ProductGrid } from "./product-grid"
 import { CartDrawer } from "./cart-drawer"
 import { ProductModal } from "./product-modal"
@@ -18,6 +18,7 @@ export default function MinimalShop() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("全部")
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
   // 從 localStorage 載入購物車數據
   useEffect(() => {
@@ -42,16 +43,40 @@ export default function MinimalShop() {
     }
   }, [cart])
 
+  // 防抖搜尋查詢
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 300) // 300ms 延遲
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // 當防抖搜尋查詢變更時，執行搜尋
+  useEffect(() => {
+    const performSearch = async () => {
+      await fetchProducts(
+        selectedCategory === "全部" ? undefined : selectedCategory, 
+        debouncedSearchQuery || undefined
+      )
+    }
+    
+    performSearch()
+  }, [debouncedSearchQuery, selectedCategory, fetchProducts])
+
   // 處理搜尋
-  const handleSearch = async (query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query)
-    await fetchProducts(selectedCategory === "全部" ? undefined : selectedCategory, query || undefined)
   }
 
   // 處理分類篩選
   const handleCategoryChange = async (category: string) => {
     setSelectedCategory(category)
-    await fetchProducts(category === "全部" ? undefined : category, searchQuery || undefined)
+    // 分類變更時立即搜尋，不需要防抖
+    await fetchProducts(
+      category === "全部" ? undefined : category, 
+      searchQuery || undefined
+    )
   }
 
   const addToCart = (product: Product, quantity = 1) => {
