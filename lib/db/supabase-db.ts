@@ -215,6 +215,20 @@ export const productDB = {
       .eq('id', id)
     
     if (error) throw error
+  },
+
+  // 搜尋產品
+  async searchProducts(query: string): Promise<Product[]> {
+    const searchQuery = query.toLowerCase()
+    
+    const { data, error } = await supabase
+      .from(TABLES.PRODUCTS)
+      .select('*')
+      .or(`name.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`)
+      .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    return data || []
   }
 }
 

@@ -10,7 +10,10 @@ export async function GET(request: NextRequest) {
 
     let products
 
-    if (category) {
+    if (query) {
+      // 搜尋產品
+      products = await productDB.searchProducts(query)
+    } else if (category) {
       // 根據分類取得產品
       products = await productDB.getProductsByCategory(category)
     } else {
