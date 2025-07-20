@@ -31,19 +31,27 @@ const ShinyText: React.FC<ShinyTextProps> = ({ text, disabled = false, speed = 5
             </div>
         );
     } else {
-        // 淺色模式：使用偽元素實現閃亮效果
+        // 淺色模式：使用 reactbits.dev 的漸變文字效果
+        const gradientStyle = {
+            backgroundImage: 'linear-gradient(to right, #ffaa40, #9c40ff, #ffaa40)',
+            animationDuration: `${speed}s`,
+        };
+
         return (
-            <div className={`relative text-zinc-900 inline-block ${className}`}>
-                <span className="relative z-10">{text}</span>
-                {!disabled && (
-                    <div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-shine"
-                        style={{
-                            backgroundSize: '200% 100%',
-                            animationDuration: animationDuration,
-                        }}
-                    />
-                )}
+            <div
+                className={`relative inline-block ${className}`}
+            >
+                <div
+                    className="inline-block relative text-transparent bg-cover animate-gradient"
+                    style={{
+                        ...gradientStyle,
+                        backgroundClip: "text",
+                        WebkitBackgroundClip: "text",
+                        backgroundSize: "300% 100%",
+                    }}
+                >
+                    {text}
+                </div>
             </div>
         );
     }
