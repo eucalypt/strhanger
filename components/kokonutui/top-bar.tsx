@@ -23,6 +23,79 @@ interface Category {
   updated_at: string
 }
 
+// 獨立的搜尋輸入框組件
+function SearchInput({ 
+  isOpen, 
+  onSearch, 
+  onClose, 
+  placeholder = "搜尋商品..." 
+}: {
+  isOpen: boolean
+  onSearch: (query: string) => void
+  onClose: () => void
+  placeholder?: string
+}) {
+  const [inputValue, setInputValue] = useState("")
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus()
+      inputRef.current.select()
+    }
+  }, [isOpen])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setInputValue(value)
+    onSearch(value)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.preventDefault()
+      setInputValue("")
+      onSearch("")
+      onClose()
+    } else if (e.key === "Enter") {
+      e.preventDefault()
+    }
+  }
+
+  const handleClose = () => {
+    setInputValue("")
+    onSearch("")
+    onClose()
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="relative">
+      <input
+        ref={inputRef}
+        type="text"
+        value={inputValue}
+        placeholder={placeholder}
+        className="w-48 sm:w-56 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm px-3 py-1.5 
+                  text-zinc-800 dark:text-zinc-200
+                  focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700
+                  transition-all duration-200"
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+      />
+      <button
+        type="button"
+        onClick={handleClose}
+        className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-zinc-200 
+                  dark:hover:bg-zinc-700 rounded-full text-zinc-600 dark:text-zinc-400"
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  )
+}
+
 export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory, onCategoryChange }: TopBarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -30,7 +103,6 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
   const [loading, setLoading] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [memberData, setMemberData] = useState<any>(null)
-  const searchInputRef = useRef<HTMLInputElement>(null)
   const [showMemberMenu, setShowMemberMenu] = useState(false)
   const memberMenuRef = useRef<HTMLDivElement>(null)
 
@@ -97,17 +169,6 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [showMemberMenu])
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      e.preventDefault()
-      setIsSearchOpen(false)
-      searchInputRef.current?.blur()
-    } else if (e.key === "Enter") {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-  }
 
   return (
     <div
@@ -215,29 +276,12 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
         {isSearchOpen && (
           <div className="px-3 pb-3 border-t border-zinc-200 dark:border-zinc-800">
             <div className="relative pt-3">
-              <input
-                ref={searchInputRef}
-                type="text"
+              <SearchInput 
+                isOpen={isSearchOpen}
+                onSearch={onSearch}
+                onClose={() => setIsSearchOpen(false)}
                 placeholder="搜尋商品..."
-                className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-lg text-sm px-4 py-3 
-                                  text-zinc-800 dark:text-zinc-200
-                                  focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700
-                                  border border-zinc-200 dark:border-zinc-700"
-                onChange={(e) => onSearch(e.target.value)}
-                onKeyDown={handleKeyPress}
-                autoFocus
               />
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSearchOpen(false)
-                  onSearch("")
-                }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-zinc-200 
-                                    dark:hover:bg-zinc-700 rounded-full text-zinc-600 dark:text-zinc-400"
-              >
-                <X className="w-4 h-4" />
-              </button>
             </div>
           </div>
         )}
@@ -300,36 +344,12 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
             </Link>
           )}
           <ThemeToggle />
-          {isSearchOpen && (
-            <div className="relative">
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="搜尋商品..."
-                className="w-48 sm:w-56 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm px-3 py-1.5 
-                              text-zinc-800 dark:text-zinc-200
-                              focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700
-                              transition-all duration-200"
-                onChange={(e) => onSearch(e.target.value)}
-                onKeyDown={handleKeyPress}
-                onKeyPress={(e) => e.stopPropagation()}
-                onKeyUp={(e) => e.stopPropagation()}
-                onFocus={(e) => e.target.select()}
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSearchOpen(false)
-                  onSearch("")
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-zinc-200 
-                                  dark:hover:bg-zinc-700 rounded-full text-zinc-600 dark:text-zinc-400"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          )}
+          <SearchInput 
+            isOpen={isSearchOpen}
+            onSearch={onSearch}
+            onClose={() => setIsSearchOpen(false)}
+            placeholder="搜尋商品..."
+          />
           <button
             type="button"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
