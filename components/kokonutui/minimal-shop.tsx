@@ -18,7 +18,6 @@ export default function MinimalShop() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("全部")
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   // 從 localStorage 載入購物車數據
@@ -49,44 +48,27 @@ export default function MinimalShop() {
     }
   }, [cart])
 
-  // 防抖搜尋查詢
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery)
-    }, 500) // 增加到 500ms 延遲，給用戶更多時間完成輸入
-
-    return () => clearTimeout(timer)
-  }, [searchQuery])
-
-  // 當防抖搜尋查詢變更時，執行搜尋
-  useEffect(() => {
+  // 處理搜尋（只在按下 Enter 時觸發）
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    
+    // 執行搜尋
     const performSearch = async () => {
       // 當搜尋查詢為空且分類為"全部"時，不傳遞任何參數來獲取全部商品
-      if (debouncedSearchQuery === "" && selectedCategory === "全部") {
+      if (query === "" && selectedCategory === "全部") {
         await fetchProducts()
       } else {
         await fetchProducts(
           selectedCategory === "全部" ? undefined : selectedCategory, 
-          debouncedSearchQuery || undefined
+          query || undefined
         )
       }
     }
     
     performSearch()
-  }, [debouncedSearchQuery, selectedCategory]) // 移除 fetchProducts 依賴項，因為它現在是穩定的 useCallback
-
-  // 記憶化搜尋參數，避免不必要的重新渲染
-  const searchParams = useMemo(() => ({
-    category: selectedCategory === "全部" ? undefined : selectedCategory,
-    query: debouncedSearchQuery || undefined
-  }), [selectedCategory, debouncedSearchQuery])
-
-  // 處理搜尋
-  const handleSearch = (query: string) => {
-    setSearchQuery(query)
   }
 
-  // 處理搜尋值變更（用於搜尋框輸入）
+  // 處理搜尋值變更（用於搜尋框輸入，不觸發搜尋）
   const handleSearchValueChange = (value: string) => {
     setSearchQuery(value)
   }

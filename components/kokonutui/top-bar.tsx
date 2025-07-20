@@ -75,6 +75,7 @@ function SearchInput({
       setIsFocused(false)
     } else if (e.key === "Enter") {
       e.preventDefault()
+      // 只在按下 Enter 時觸發搜尋
       onSearch(searchValue)
     }
   }
@@ -102,7 +103,7 @@ function SearchInput({
   if (!isOpen) return null
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center">
       <input
         ref={inputRef}
         type="text"
@@ -119,9 +120,19 @@ function SearchInput({
       />
       <button
         type="button"
+        onClick={() => onSearch(searchValue)}
+        className="ml-2 p-1.5 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 
+                  rounded-md text-zinc-600 dark:text-zinc-400 transition-colors"
+        title="搜尋"
+      >
+        <Search className="w-4 h-4" />
+      </button>
+      <button
+        type="button"
         onClick={handleClose}
-        className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-zinc-200 
-                  dark:hover:bg-zinc-700 rounded-full text-zinc-600 dark:text-zinc-400"
+        className="ml-1 p-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-md 
+                  text-zinc-600 dark:text-zinc-400 transition-colors"
+        title="清空搜尋"
       >
         <X className="w-4 h-4" />
       </button>
