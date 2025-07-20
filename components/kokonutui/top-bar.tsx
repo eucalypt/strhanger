@@ -13,6 +13,10 @@ interface TopBarProps {
   onSearch: (query: string) => void
   selectedCategory: string
   onCategoryChange: (category: string) => void
+  searchValue?: string
+  onSearchValueChange?: (value: string) => void
+  isSearchOpen?: boolean
+  onSearchToggle?: () => void
 }
 
 interface Category {
@@ -28,14 +32,17 @@ function SearchInput({
   isOpen, 
   onSearch, 
   onClose, 
-  placeholder = "搜尋商品..." 
+  placeholder = "搜尋商品...",
+  searchValue = "",
+  onSearchValueChange
 }: {
   isOpen: boolean
   onSearch: (query: string) => void
   onClose: () => void
   placeholder?: string
+  searchValue?: string
+  onSearchValueChange?: (value: string) => void
 }) {
-  const [inputValue, setInputValue] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -47,23 +54,23 @@ function SearchInput({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    setInputValue(value)
-    onSearch(value)
+    onSearchValueChange?.(value)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       e.preventDefault()
-      setInputValue("")
+      onSearchValueChange?.("")
       onSearch("")
       onClose()
     } else if (e.key === "Enter") {
       e.preventDefault()
+      onSearch(searchValue)
     }
   }
 
   const handleClose = () => {
-    setInputValue("")
+    onSearchValueChange?.("")
     onSearch("")
     onClose()
   }
@@ -75,7 +82,7 @@ function SearchInput({
       <input
         ref={inputRef}
         type="text"
-        value={inputValue}
+        value={searchValue}
         placeholder={placeholder}
         className="w-48 sm:w-56 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm px-3 py-1.5 
                   text-zinc-800 dark:text-zinc-200
@@ -96,8 +103,17 @@ function SearchInput({
   )
 }
 
-export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory, onCategoryChange }: TopBarProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
+export function TopBar({ 
+  cartItemCount, 
+  onCartClick, 
+  onSearch, 
+  selectedCategory, 
+  onCategoryChange,
+  searchValue = "",
+  onSearchValueChange,
+  isSearchOpen = false,
+  onSearchToggle
+}: TopBarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [categories, setCategories] = useState<string[]>(["全部"])
   const [loading, setLoading] = useState(true)
@@ -190,7 +206,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
             <ThemeToggle />
             <button
               type="button"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              onClick={() => onSearchToggle?.()}
               className={`p-2 rounded-md transition-colors text-zinc-700 dark:text-zinc-300 ${
                 isSearchOpen ? "bg-zinc-100 dark:bg-zinc-800" : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
               }`}
@@ -279,8 +295,10 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
               <SearchInput 
                 isOpen={isSearchOpen}
                 onSearch={onSearch}
-                onClose={() => setIsSearchOpen(false)}
+                onClose={() => onSearchToggle?.()}
                 placeholder="搜尋商品..."
+                searchValue={searchValue}
+                onSearchValueChange={onSearchValueChange}
               />
             </div>
           </div>
@@ -347,12 +365,14 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
           <SearchInput 
             isOpen={isSearchOpen}
             onSearch={onSearch}
-            onClose={() => setIsSearchOpen(false)}
+            onClose={() => onSearchToggle?.()}
             placeholder="搜尋商品..."
+            searchValue={searchValue}
+            onSearchValueChange={onSearchValueChange}
           />
           <button
             type="button"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
+            onClick={() => onSearchToggle?.()}
             className={`p-1.5 rounded-md transition-colors text-zinc-700 dark:text-zinc-300 ${
               isSearchOpen ? "bg-zinc-100 dark:bg-zinc-800" : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
             }`}

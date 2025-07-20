@@ -19,6 +19,7 @@ export default function MinimalShop() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("全部")
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   // 從 localStorage 載入購物車數據
   useEffect(() => {
@@ -77,6 +78,16 @@ export default function MinimalShop() {
   // 處理搜尋
   const handleSearch = (query: string) => {
     setSearchQuery(query)
+  }
+
+  // 處理搜尋值變更（用於搜尋框輸入）
+  const handleSearchValueChange = (value: string) => {
+    setSearchQuery(value)
+  }
+
+  // 處理搜尋框開關
+  const handleSearchToggle = () => {
+    setIsSearchOpen(!isSearchOpen)
   }
 
   // 處理分類篩選
@@ -157,6 +168,10 @@ export default function MinimalShop() {
         onSearch={handleSearch}
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
+        isSearchOpen={isSearchOpen}
+        onSearchToggle={handleSearchToggle}
+        searchValue={searchQuery}
+        onSearchValueChange={handleSearchValueChange}
       />
 
       <div className="mx-auto px-2 pt-16 md:pt-12 pb-16">
