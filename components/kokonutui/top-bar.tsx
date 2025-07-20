@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import { motion } from "motion/react"
 import Link from "next/link"
 import ShinyText from "@/components/ui/shiny-text"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 interface TopBarProps {
   cartItemCount: number
@@ -121,6 +122,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
           </Link>
           
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -283,6 +285,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
+          <ThemeToggle />
           {/* 管理員專屬：管理後台連結 */}
           {isLoggedIn && memberData?.level === '管理員' && (
             <Link
