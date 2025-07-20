@@ -62,7 +62,7 @@ export default function MinimalShop() {
     }
     
     performSearch()
-  }, [debouncedSearchQuery, selectedCategory, fetchProducts])
+  }, [debouncedSearchQuery, selectedCategory]) // 移除 fetchProducts 依賴項
 
   // 處理搜尋
   const handleSearch = (query: string) => {
