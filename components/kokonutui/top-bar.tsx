@@ -100,12 +100,12 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
+      e.preventDefault()
       setIsSearchOpen(false)
       searchInputRef.current?.blur()
-    }
-    // 阻止 Enter 鍵觸發表單提交
-    if (e.key === "Enter") {
+    } else if (e.key === "Enter") {
       e.preventDefault()
+      e.stopPropagation()
     }
   }
 
@@ -225,7 +225,6 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
                                   border border-zinc-200 dark:border-zinc-700"
                 onChange={(e) => onSearch(e.target.value)}
                 onKeyDown={handleKeyPress}
-                onSubmit={(e) => e.preventDefault()}
                 autoFocus
               />
               <button
@@ -313,7 +312,9 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
                               transition-all duration-200"
                 onChange={(e) => onSearch(e.target.value)}
                 onKeyDown={handleKeyPress}
-                onSubmit={(e) => e.preventDefault()}
+                onKeyPress={(e) => e.stopPropagation()}
+                onKeyUp={(e) => e.stopPropagation()}
+                onFocus={(e) => e.target.select()}
                 autoFocus
               />
               <button
