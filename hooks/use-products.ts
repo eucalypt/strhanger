@@ -162,9 +162,9 @@ export function useProducts() {
   }
 
   // 初始化時取得所有產品
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+  // useEffect(() => {
+  //   fetchProducts()
+  // }, [])
 
   return {
     products,

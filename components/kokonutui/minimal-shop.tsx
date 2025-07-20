@@ -36,6 +36,11 @@ export default function MinimalShop() {
     }
   }, [])
 
+  // 初始化時載入所有產品
+  useEffect(() => {
+    fetchProducts()
+  }, []) // 只在組件掛載時執行一次
+
   // 當購物車變更時，保存到 localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -54,6 +59,11 @@ export default function MinimalShop() {
 
   // 當防抖搜尋查詢變更時，執行搜尋
   useEffect(() => {
+    // 避免初始化時的無意義搜尋
+    if (debouncedSearchQuery === "" && searchQuery === "") {
+      return
+    }
+    
     const performSearch = async () => {
       await fetchProducts(
         selectedCategory === "全部" ? undefined : selectedCategory, 
