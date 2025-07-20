@@ -285,7 +285,6 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          <ThemeToggle />
           {/* 管理員專屬：管理後台連結 */}
           {isLoggedIn && memberData?.level === '管理員' && (
             <Link
@@ -296,6 +295,7 @@ export function TopBar({ cartItemCount, onCartClick, onSearch, selectedCategory,
               管理後台
             </Link>
           )}
+          <ThemeToggle />
           <motion.div className="relative" initial={false} animate={{ width: isSearchOpen ? "auto" : 0 }}>
             <input
               ref={searchInputRef}
