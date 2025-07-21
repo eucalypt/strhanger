@@ -152,7 +152,7 @@ export default function MinimalShop() {
     <div className="h-screen bg-zinc-50 dark:bg-zinc-950">
       <TopBar 
         cartItemCount={cartItemCount} 
-        onCartClick={() => setIsCartOpen(true)} 
+        onCartClick={() => setIsCartOpen(!isCartOpen)} 
         onSearch={handleSearch}
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
