@@ -57,11 +57,20 @@ export function CartDrawer({ cart, onClose, onRemoveFromCart, onUpdateQuantity, 
         className="fixed inset-0 bg-black"
         onClick={onClose}
       />
+      {/* 手機版專用：左側可點擊關閉區域 */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0 }}
+        exit={{ opacity: 0 }}
+        className="fixed left-0 top-0 h-full w-1/4 sm:hidden"
+        onClick={onClose}
+      />
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         className="fixed right-0 top-0 h-full w-full sm:w-[400px] bg-white dark:bg-zinc-900 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">

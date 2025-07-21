@@ -160,6 +160,7 @@ export default function MinimalShop() {
         onSearchToggle={handleSearchToggle}
         searchValue={searchQuery}
         onSearchValueChange={handleSearchValueChange}
+        onCloseCart={() => setIsCartOpen(false)}
       />
 
       <div className="mx-auto px-2 pt-16 md:pt-12 pb-16">

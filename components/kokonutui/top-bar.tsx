@@ -17,6 +17,7 @@ interface TopBarProps {
   onSearchValueChange?: (value: string) => void
   isSearchOpen?: boolean
   onSearchToggle?: () => void
+  onCloseCart?: () => void
 }
 
 interface Category {
@@ -149,7 +150,8 @@ export function TopBar({
   searchValue = "",
   onSearchValueChange,
   isSearchOpen = false,
-  onSearchToggle
+  onSearchToggle,
+  onCloseCart
 }: TopBarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [categories, setCategories] = useState<string[]>(["全部"])
@@ -235,6 +237,7 @@ export function TopBar({
           <Link
             href="/"
             className="shrink-0"
+            onClick={onCloseCart}
           >
             <ShinyText text="Something Right" speed={5} className="text-xl font-bold" />
           </Link>
@@ -282,8 +285,20 @@ export function TopBar({
                   {isLoggedIn ? (
                     <div className="py-1">
                       <div className="px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400">{memberData?.name || '會員'}</div>
-                      <Link href="/member" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">會員中心</Link>
-                      <Link href="/member/orders" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">訂單查詢</Link>
+                      <Link 
+                        href="/member" 
+                        className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        onClick={() => setShowMemberMenu(false)}
+                      >
+                        會員中心
+                      </Link>
+                      <Link 
+                        href="/member/orders" 
+                        className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        onClick={() => setShowMemberMenu(false)}
+                      >
+                        訂單查詢
+                      </Link>
                       <button
                         className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
                         onClick={() => {
@@ -296,7 +311,13 @@ export function TopBar({
                     </div>
                   ) : (
                     <div className="py-1">
-                      <Link href="/login" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">登入/註冊</Link>
+                      <Link 
+                        href="/login" 
+                        className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        onClick={() => setShowMemberMenu(false)}
+                      >
+                        登入/註冊
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -353,7 +374,10 @@ export function TopBar({
                     ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-sm"
                     : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
-                onClick={() => onCategoryChange(category)}
+                onClick={() => {
+                  onCategoryChange(category)
+                  onCloseCart?.()
+                }}
               >
                 {category}
               </button>
@@ -367,6 +391,7 @@ export function TopBar({
         <Link
           href="/"
           className="shrink-0"
+          onClick={onCloseCart}
         >
           <ShinyText text="Something Right" speed={5} className="text-xl font-bold" />
         </Link>
@@ -380,7 +405,10 @@ export function TopBar({
                   ? "text-zinc-900 dark:text-white text-sm font-medium"
                   : "text-zinc-600 dark:text-zinc-400 text-sm hover:text-zinc-900 dark:hover:text-white"
               }`}
-              onClick={() => onCategoryChange(category)}
+              onClick={() => {
+                onCategoryChange(category)
+                onCloseCart?.()
+              }}
             >
               {category}
             </button>
@@ -450,8 +478,20 @@ export function TopBar({
                 {isLoggedIn ? (
                   <div className="py-1">
                     <div className="px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400">{memberData?.name || '會員'}</div>
-                    <Link href="/member" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">會員中心</Link>
-                    <Link href="/member/orders" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">訂單查詢</Link>
+                    <Link 
+                      href="/member" 
+                      className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      onClick={() => setShowMemberMenu(false)}
+                    >
+                      會員中心
+                    </Link>
+                    <Link 
+                      href="/member/orders" 
+                      className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      onClick={() => setShowMemberMenu(false)}
+                    >
+                      訂單查詢
+                    </Link>
                     <button
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
                       onClick={() => {
@@ -464,7 +504,13 @@ export function TopBar({
                   </div>
                 ) : (
                   <div className="py-1">
-                    <Link href="/login" className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800">登入/註冊</Link>
+                    <Link 
+                      href="/login" 
+                      className="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      onClick={() => setShowMemberMenu(false)}
+                    >
+                      登入/註冊
+                    </Link>
                   </div>
                 )}
               </div>
