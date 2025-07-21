@@ -113,10 +113,8 @@ function SearchInput({
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="relative flex items-center">
+    <div className={`relative flex items-center ${isOpen ? "block" : "hidden"}`}>
       <input
         ref={inputRef}
         type="text"
@@ -368,20 +366,20 @@ export function TopBar({
         </div>
         
         {/* 手機版搜尋欄 */}
-        {isSearchOpen && (
-          <div className="px-3 pb-3 border-t border-zinc-200 dark:border-zinc-800">
-            <div className="relative pt-3">
-              <SearchInput 
-                isOpen={isSearchOpen}
-                onSearch={onSearch}
-                onClose={() => onSearchToggle?.()}
-                placeholder="搜尋商品..."
-                searchValue={searchValue}
-                onSearchValueChange={onSearchValueChange}
-              />
-            </div>
+        <div className={`px-3 pb-3 border-t border-zinc-200 dark:border-zinc-800 transition-all duration-200 ${
+          isSearchOpen ? "block" : "hidden"
+        }`}>
+          <div className="relative pt-3">
+            <SearchInput 
+              isOpen={isSearchOpen}
+              onSearch={onSearch}
+              onClose={() => onSearchToggle?.()}
+              placeholder="搜尋商品..."
+              searchValue={searchValue}
+              onSearchValueChange={onSearchValueChange}
+            />
           </div>
-        )}
+        </div>
         
         {/* 手機版分類選單 */}
         <div className="px-3 pb-3 border-t border-zinc-200 dark:border-zinc-800">
