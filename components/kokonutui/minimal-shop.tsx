@@ -48,21 +48,18 @@ export default function MinimalShop() {
     }
   }, [cart])
 
-  // 處理搜尋（只在按下 Enter 時觸發）
+  // 處理搜尋（點擊搜尋按鈕或按下 Enter 時觸發）
   const handleSearch = (query: string) => {
     setSearchQuery(query)
     
     // 執行搜尋
     const performSearch = async () => {
-      // 當搜尋查詢為空且分類為"全部"時，不傳遞任何參數來獲取全部商品
-      if (query === "" && selectedCategory === "全部") {
-        await fetchProducts()
-      } else {
-        await fetchProducts(
-          selectedCategory === "全部" ? undefined : selectedCategory, 
-          query || undefined
-        )
-      }
+      // 無論搜尋框是否有內容都執行搜尋
+      // 如果搜尋框為空，會搜尋出全部商品
+      await fetchProducts(
+        selectedCategory === "全部" ? undefined : selectedCategory, 
+        query || undefined
+      )
     }
     
     performSearch()
@@ -161,6 +158,7 @@ export default function MinimalShop() {
         searchValue={searchQuery}
         onSearchValueChange={handleSearchValueChange}
         onCloseCart={() => setIsCartOpen(false)}
+        isCartOpen={isCartOpen}
       />
 
       <div className="mx-auto px-2 pt-16 md:pt-12 pb-16">

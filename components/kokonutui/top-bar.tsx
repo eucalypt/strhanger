@@ -18,6 +18,7 @@ interface TopBarProps {
   isSearchOpen?: boolean
   onSearchToggle?: () => void
   onCloseCart?: () => void
+  isCartOpen?: boolean
 }
 
 interface Category {
@@ -46,6 +47,7 @@ function SearchInput({
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const [hasSearched, setHasSearched] = useState(false)
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -70,14 +72,20 @@ function SearchInput({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       e.preventDefault()
-      onSearchValueChange?.("")
-      onSearch("")
-      onClose()
-      setIsFocused(false)
+      if (searchValue) {
+        // 如果有內容，清空搜尋框
+        onSearchValueChange?.("")
+      } else {
+        // 如果沒有內容，關閉搜尋框
+        onClose()
+        setIsFocused(false)
+      }
     } else if (e.key === "Enter") {
       e.preventDefault()
-      // 只在按下 Enter 時觸發搜尋
+      // 按下 Enter 時觸發搜尋，無論搜尋框是否有內容都執行搜尋
+      // 如果搜尋框為空，會搜尋出全部商品
       onSearch(searchValue)
+      setHasSearched(true)
     }
   }
 
@@ -95,10 +103,14 @@ function SearchInput({
   }
 
   const handleClose = () => {
-    onSearchValueChange?.("")
-    onSearch("")
-    onClose()
-    setIsFocused(false)
+    if (searchValue) {
+      // 如果有內容，清空搜尋框
+      onSearchValueChange?.("")
+    } else {
+      // 如果沒有內容，關閉搜尋框
+      onClose()
+      setIsFocused(false)
+    }
   }
 
   if (!isOpen) return null
@@ -121,7 +133,12 @@ function SearchInput({
       />
       <button
         type="button"
-        onClick={() => onSearch(searchValue)}
+        onClick={() => {
+          // 點擊搜尋按鈕時，無論搜尋框是否有內容都執行搜尋
+          // 如果搜尋框為空，會搜尋出全部商品
+          onSearch(searchValue)
+          setHasSearched(true)
+        }}
         className="ml-2 p-1.5 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 
                   rounded-md text-zinc-600 dark:text-zinc-400 transition-colors"
         title="搜尋"
@@ -151,7 +168,8 @@ export function TopBar({
   onSearchValueChange,
   isSearchOpen = false,
   onSearchToggle,
-  onCloseCart
+  onCloseCart,
+  isCartOpen = false
 }: TopBarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [categories, setCategories] = useState<string[]>(["全部"])
@@ -195,7 +213,6 @@ export function TopBar({
       const memberLoggedIn = localStorage.getItem('memberLoggedIn') === 'true'
       const storedMemberData = localStorage.getItem('memberData')
       
-      console.log('Member login status:', memberLoggedIn)
       setIsLoggedIn(memberLoggedIn)
       if (storedMemberData) {
         try {
@@ -327,7 +344,11 @@ export function TopBar({
             <button
               type="button"
               onClick={onCartClick}
-              className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md relative text-zinc-700 dark:text-zinc-300"
+              className={`p-2 rounded-md relative text-zinc-700 dark:text-zinc-300 transition-colors ${
+                isCartOpen 
+                  ? "bg-zinc-100 dark:bg-zinc-800" 
+                  : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              }`}
               title="購物車"
             >
               <ShoppingBag className="w-4 h-4" />
@@ -435,7 +456,7 @@ export function TopBar({
             searchValue={searchValue}
             onSearchValueChange={onSearchValueChange}
           />
-          {/* 只在搜尋框關閉時顯示搜尋按鈕 */}
+          {/* 搜尋按鈕 - 只在搜尋框關閉時顯示 */}
           {!isSearchOpen && (
             <button
               type="button"
@@ -520,7 +541,11 @@ export function TopBar({
           <button
             type="button"
             onClick={onCartClick}
-            className="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md relative text-zinc-700 dark:text-zinc-300"
+            className={`p-1.5 rounded-md relative text-zinc-700 dark:text-zinc-300 transition-colors ${
+              isCartOpen 
+                ? "bg-zinc-100 dark:bg-zinc-800" 
+                : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            }`}
             title="購物車"
           >
             <ShoppingBag className="w-4 h-4" />
